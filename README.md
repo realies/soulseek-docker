@@ -1,9 +1,18 @@
+![](https://i.snag.gy/RyGBbn.jpg)
+
 ## Typical Usage
+
+##### Using Docker CLI
 ```
-docker run -d --name soulseek \
--v "~/.SoulseekQt":"/root/.SoulseekQt" \
--v "~/Soulseek Downloads":"/root/Soulseek Downloads" \
--p 5900:5900 \
+docker run -d --name soulseek --restart=always \
+-v "/persistent/appdata":"/root/.SoulseekQt" \
+-v "/persistent/logs":"/root/Soulseek Chat Logs" \
+-v "/persistent/downloads":"/root/Soulseek Downloads" \
+-p 6080:6080 \
 realies/soulseek
 ```
-Where `~/.SoulseekQt` and `~/Soulseek Downloads` are the host locations for appdata and downloads persistence.
+
+##### Using Docker Compose
+```
+docker-compose up -d
+```

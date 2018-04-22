@@ -1,0 +1,14 @@
+version: '2'
+services:
+  soulseek:
+    build: .
+    ports:
+      - "6080:6080"
+    volumes:
+      - appdata:/root/.SoulseekQt
+      - logs:/root/Soulseek Chat Logs
+      - downloads:/root/Soulseek Downloads
+volumes:
+  appdata:
+  logs:
+  downloads:

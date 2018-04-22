@@ -1,0 +1,13 @@
+@@ -104,6 +104,12 @@
+ 
+             <h1 class="noVNC_logo" translate="no"><span>no</span><br />VNC</h1>
+ 
++            <!-- Downloads -->
++            <a href="downloads/" target="_blank"><input type="image" alt="Downloads" src="app/images/downloads.svg" class="noVNC_button" title="Downloads" style="width:25px;height:25px" /></a>
++
++            <!-- Logs -->
++            <a href="logs/" target="_blank"><input type="image" alt="Logs" src="app/images/logs.svg" class="noVNC_button" title="Logs" style="width:25px;height:25px" /></a>
++
+             <!-- Drag/Pan the viewport -->
+             <input type="image" alt="viewport drag" src="app/images/drag.svg"
+                 id="noVNC_view_drag_button" class="noVNC_button noVNC_hidden"

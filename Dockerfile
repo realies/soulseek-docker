@@ -12,6 +12,7 @@ run apt-get update && \
  curl -fL# https://use.fontawesome.com/releases/v5.0.10/svgs/solid/comments.svg -o /usr/share/novnc/app/images/logs.svg && \
  bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /usr/share/novnc/app/images/{downloads,logs}.svg' && \
  patch /usr/share/novnc/vnc.html < /tmp/ui.patch && \
+ sed -i 's/10px 0 5px/8px 0 6px/' /usr/share/novnc/app/styles/base.css && \
  ln -s /squashfs-root/soulseek.png /usr/share/novnc/app/images/soulseek.png && \
  ln -s /root/Soulseek\ Chat\ Logs /usr/share/novnc/logs && \
  ln -s /root/Soulseek\ Downloads /usr/share/novnc/downloads && \

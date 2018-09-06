@@ -2,7 +2,7 @@ from ubuntu:bionic
 copy ui.patch /tmp
 run apt-get update && \
  apt-get upgrade -y && \
- apt-get install -y curl locales net-tools novnc openbox patch supervisor x11vnc xvfb && \
+ apt-get install -y binutils curl locales net-tools novnc openbox patch supervisor x11vnc xvfb && \
  locale-gen en_US.UTF-8 && \
  curl -fL# https://github.com/novnc/noVNC/archive/v1.0.0.tar.gz -o /tmp/novnc.tar.gz && \
  tar -xvzf /tmp/novnc.tar.gz -C /tmp && \
@@ -17,7 +17,8 @@ run apt-get update && \
  curl -fL# https://dropbox.com/s/0vi87eef3ooh7iy/SoulseekQt-2018-1-30-64bit.tgz -o /tmp/soulseek.tgz && \
  tar -xvzf /tmp/soulseek.tgz -C /tmp && \
  /tmp/SoulseekQt-2018-1-30-64bit.AppImage --appimage-extract && \
- apt-get purge -y curl patch && \
+ strip /squashfs-root/SoulseekQt && \
+ apt-get purge -y binutils curl patch && \
  apt-get autoremove -y && \
  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 env LANG en_US.UTF-8

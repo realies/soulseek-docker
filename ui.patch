@@ -1,13 +1,16 @@
-@@ -104,6 +104,12 @@
- 
-             <h1 class="noVNC_logo" translate="no"><span>no</span><br />VNC</h1>
- 
+@@ -97,7 +97,14 @@
+
+             <div class="noVNC_scroll">
+
+-            <h1 class="noVNC_logo" translate="no"><span>no</span><br />VNC</h1>
++            <!-- App icon -->
++            <img src="app/images/soulseek.png" style="margin:10px 0 0 0;vertical-align:middle;width:21px;height:21px;padding:6px;background:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.8));border-radius:6px" />
++
 +            <!-- Downloads -->
-+            <a href="downloads/" target="_blank"><input type="image" alt="Downloads" src="app/images/downloads.svg" class="noVNC_button" title="Downloads" style="width:25px;height:25px" /></a>
++            <a href="downloads/" target="_blank"><input type="image" alt="Downloads" src="app/images/downloads.svg" class="noVNC_button" title="Downloads" style="width:20px;height:20px;padding:6.5px" /></a>
 +
 +            <!-- Logs -->
-+            <a href="logs/" target="_blank"><input type="image" alt="Logs" src="app/images/logs.svg" class="noVNC_button" title="Logs" style="width:25px;height:25px" /></a>
-+
++            <a href="logs/" target="_blank"><input type="image" alt="Logs" src="app/images/logs.svg" class="noVNC_button" title="Logs" style="width:18px;height:18px;padding:7.5px" /></a>
+
              <!-- Drag/Pan the viewport -->
              <input type="image" alt="viewport drag" src="app/images/drag.svg"
-                 id="noVNC_view_drag_button" class="noVNC_button noVNC_hidden"

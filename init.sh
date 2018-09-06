@@ -1,8 +1,10 @@
-[supervisord]
+#/bin/sh
+resolution=${resolution:-1280x720}x16
+[ ! -f /etc/supervisord.conf ] && echo "[supervisord]
 nodaemon=true
 
 [program:xvfb]
-command=/usr/bin/Xvfb :1 -screen 0 1280x720x16
+command=/usr/bin/Xvfb :1 -screen 0 $resolution
 autorestart=true
 priority=100
 
@@ -26,4 +28,5 @@ priority=400
 environment=HOME="/root",DISPLAY=":1",USER="root"
 command=/squashfs-root/SoulseekQt
 autorestart=true
-priority=500
+priority=500" > /etc/supervisord.conf
+/usr/bin/supervisord -c /etc/supervisord.conf

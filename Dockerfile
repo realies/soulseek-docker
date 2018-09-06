@@ -26,6 +26,7 @@ run apt-get update && \
 env LANG en_US.UTF-8
 env LANGUAGE en_US:en
 env LC_ALL en_US.UTF-8
-add etc /etc
-add usr /usr
-entrypoint ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]
+copy etc /etc
+copy usr /usr
+copy init.sh /init.sh
+entrypoint /init.sh

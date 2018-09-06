@@ -2,7 +2,8 @@ from ubuntu:bionic
 copy ui.patch /tmp
 run apt-get update && \
  apt-get upgrade -y && \
- apt-get install -y curl net-tools novnc openbox patch supervisor x11vnc xvfb && \
+ apt-get install -y curl locales net-tools novnc openbox patch supervisor x11vnc xvfb && \
+ locale-gen en_US.UTF-8 && \
  curl -fL# https://github.com/novnc/noVNC/archive/v1.0.0.tar.gz -o /tmp/novnc.tar.gz && \
  tar -xvzf /tmp/novnc.tar.gz -C /tmp && \
  rm -rf /usr/share/novnc/* && \
@@ -19,6 +20,9 @@ run apt-get update && \
  apt-get purge -y curl patch && \
  apt-get autoremove -y && \
  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+env LANG en_US.UTF-8
+env LANGUAGE en_US:en
+env LC_ALL en_US.UTF-8
 add etc /etc
 add usr /usr
 entrypoint ["/usr/bin/supervisord","-c","/etc/supervisord.conf"]

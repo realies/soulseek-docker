@@ -2,8 +2,10 @@ version: '2'
 services:
   soulseek:
     build: .
+    environment:
+      - resolution=1280x720
     ports:
-      - "6080:6080"
+      - 6080:6080
     volumes:
       - appdata:/root/.SoulseekQt
       - logs:/root/Soulseek Chat Logs

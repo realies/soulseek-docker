@@ -2,12 +2,14 @@ from ubuntu:bionic
 copy ui.patch /tmp
 run apt-get update && \
  apt-get upgrade -y && \
- apt-get install -y binutils curl locales net-tools novnc openbox patch supervisor x11vnc xvfb && \
+ apt-get install -y binutils curl locales net-tools openbox patch supervisor x11vnc xvfb && \
  locale-gen en_US.UTF-8 && \
- curl -fL# https://github.com/novnc/noVNC/archive/v1.0.0.tar.gz -o /tmp/novnc.tar.gz && \
- tar -xvzf /tmp/novnc.tar.gz -C /tmp && \
- rm -rf /usr/share/novnc/* && \
- bash -c 'cp -r /tmp/noVNC*/{app,core,karma.conf.js,package.json,po,tests,utils,vendor,vnc.html,vnc_lite.html} /usr/share/novnc' && \
+ mkdir /usr/share/novnc && \
+ curl -fL# https://github.com/novnc/noVNC/archive/master.tar.gz -o /tmp/novnc.tar.gz && \
+ tar -xf /tmp/novnc.tar.gz --strip-components=1 -C /usr/share/novnc && \
+ mkdir /usr/share/novnc/utils/websockify && \
+ curl -fL# https://github.com/novnc/websockify/archive/master.tar.gz -o /tmp/websockify.tar.gz && \
+ tar -xf /tmp/websockify.tar.gz --strip-components=1 -C /usr/share/novnc/utils/websockify && \
  curl -fL# https://use.fontawesome.com/releases/v5.0.10/svgs/solid/cloud-download-alt.svg -o /usr/share/novnc/app/images/downloads.svg && \
  curl -fL# https://use.fontawesome.com/releases/v5.0.10/svgs/solid/comments.svg -o /usr/share/novnc/app/images/logs.svg && \
  bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /usr/share/novnc/app/images/{downloads,logs}.svg' && \

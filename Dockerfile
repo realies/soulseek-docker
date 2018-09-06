@@ -1,4 +1,4 @@
-from ubuntu:bionic
+from ubuntu:latest
 copy ui.patch /tmp
 run apt-get update && \
  apt-get upgrade -y && \

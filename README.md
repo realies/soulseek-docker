@@ -1,4 +1,4 @@
-![](https://i.snag.gy/RyGBbn.jpg)
+![](https://i.snag.gy/ihvCXm.jpg)
 
 ## Typical Usage
 
@@ -8,6 +8,7 @@ docker run -d --name soulseek --restart=always \
 -v "/persistent/appdata":"/root/.SoulseekQt" \
 -v "/persistent/logs":"/root/Soulseek Chat Logs" \
 -v "/persistent/downloads":"/root/Soulseek Downloads" \
+-e resolution=1280x720 \
 -p 6080:6080 \
 realies/soulseek
 ```

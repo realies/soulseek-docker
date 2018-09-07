@@ -1,4 +1,4 @@
-![](https://i.snag.gy/ihvCXm.jpg)
+![](https://i.snag.gy/8dpAbV.jpg)
 
 ## Typical Usage
 

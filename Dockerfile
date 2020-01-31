@@ -18,7 +18,7 @@ run apt-get update && \
  ln -s /squashfs-root/soulseek.png /usr/share/novnc/app/images/soulseek.png && \
  ln -s /root/Soulseek\ Chat\ Logs /usr/share/novnc/logs && \
  ln -s /root/Soulseek\ Downloads /usr/share/novnc/downloads && \
- curl -fL# https://dropbox.com/s/0vi87eef3ooh7iy/SoulseekQt-2018-1-30-64bit.tgz -o /tmp/soulseek.tgz && \
+ curl -fL# https://www.slsknet.org/SoulseekQt/Linux/SoulseekQt-2018-1-30-64bit-appimage.tgz -o /tmp/soulseek.tgz && \
  tar -xvzf /tmp/soulseek.tgz -C /tmp && \
  /tmp/SoulseekQt-2018-1-30-64bit.AppImage --appimage-extract && \
  strip /squashfs-root/SoulseekQt && \

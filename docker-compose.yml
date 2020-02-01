@@ -3,6 +3,7 @@ services:
   soulseek:
     build: .
     environment:
+      - resize=scale
       - resolution=1280x720
     ports:
       - 6080:6080

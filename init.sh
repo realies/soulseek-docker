@@ -1,5 +1,8 @@
 #/bin/sh
 resolution=${resolution:-1280x720}x16
+[ "$resize" = "auto" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true"/' /usr/share/novnc/index.html
+[ "$resize" = "scale" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=scale"/' /usr/share/novnc/index.html
+[ "$resize" = "remote" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=remote"/' /usr/share/novnc/index.html
 [ ! -f /etc/supervisord.conf ] && echo "[supervisord]
 nodaemon=true
 

@@ -1,10 +1,24 @@
-#/bin/sh
-resolution=${resolution:-1280x720}x16
+#!/bin/sh
+set -e
+[ -f /tmp/.X1-lock ] && rm /tmp/.X1-lock
+pgid=${pgid:-0}
+puid=${puid:-0}
+[ "$pgid" != 0 ] && [ "$puid" != 0 ] && \
+ groupmod -o -g "$pgid" soulseek && \
+ usermod -o -u "$puid" soulseek && \
+ chown -R soulseek:soulseek /app && \
+ chown soulseek:soulseek /data/.* && \
+ chown soulseek:soulseek /data/*
 [ "$resize" = "auto" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true"/' /usr/share/novnc/index.html
 [ "$resize" = "scale" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=scale"/' /usr/share/novnc/index.html
 [ "$resize" = "remote" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=remote"/' /usr/share/novnc/index.html
-[ ! -f /etc/supervisord.conf ] && echo "[supervisord]
+resolution=${resolution:-1280x720}x16
+[ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$puid" | cut -d: -f1) && echo "[supervisord]
 nodaemon=true
+logfile = /tmp/supervisord.log
+pidfile = /tmp/supervisord.pid
+directory = /tmp
+childlogdir = /tmp
 
 [program:xvfb]
 command=/usr/bin/Xvfb :1 -screen 0 $resolution
@@ -28,8 +42,9 @@ autorestart=true
 priority=400
 
 [program:soulseek]
-environment=HOME="/root",DISPLAY=":1",USER="root"
-command=/squashfs-root/SoulseekQt
+user=$username
+environment=HOME="/data",DISPLAY=":1",USER="$username"
+command=/app/SoulseekQt
 autorestart=true
 priority=500" > /etc/supervisord.conf
 /usr/bin/supervisord -c /etc/supervisord.conf

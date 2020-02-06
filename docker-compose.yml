@@ -3,15 +3,17 @@ services:
   soulseek:
     build: .
     environment:
+      - pgid=1000
+      - puid=1000
       - resize=scale
       - resolution=1280x720
     ports:
       - 6080:6080
     volumes:
-      - appdata:/root/.SoulseekQt
-      - logs:/root/Soulseek Chat Logs
-      - downloads:/root/Soulseek Downloads
+      - appdata:/data/.SoulseekQt
+      - downloads:/data/Soulseek Downloads
+      - logs:/data/Soulseek Chat Logs
 volumes:
   appdata:
-  logs:
   downloads:
+  logs:

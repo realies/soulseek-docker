@@ -13,7 +13,9 @@ services:
       - appdata:/data/.SoulseekQt
       - downloads:/data/Soulseek Downloads
       - logs:/data/Soulseek Chat Logs
+      - shared:/data/Soulseek Shared Folder
 volumes:
   appdata:
   downloads:
   logs:
+  shared:

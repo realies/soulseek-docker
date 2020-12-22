@@ -1,7 +1,7 @@
 FROM ubuntu:bionic
 COPY ui.patch /tmp
 RUN apt-get update && \
- apt-get install -y binutils ca-certificates curl dbus libssl1.0-dev locales openbox patch supervisor x11vnc xvfb --no-install-recommends && \
+ apt-get install -y binutils ca-certificates curl dbus libssl1.0-dev locales openbox patch supervisor x11vnc xvfb python3 --no-install-recommends && \
  dbus-uuidgen > /etc/machine-id && \
  locale-gen en_US.UTF-8 && \
  mkdir /usr/share/novnc && \

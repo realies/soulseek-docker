@@ -14,6 +14,9 @@ puid=${puid:-0}
 [ "$resize" = "remote" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=remote"/' /usr/share/novnc/index.html
 resolution=${resolution:-1280x720}x16
 
+# handling timezone
+[ -n "$timeZone" ] && [ -f "/usr/share/zoneinfo/$timeZone" ] && ln -sf "/usr/share/zoneinfo/$timeZone" /etc/localtime
+
 x11vnc_cmd="/usr/bin/x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -nopw -wait 5 -shared -permitfiletransfer -tightfilexfer -rfbport 5900"
 
 # if vncpwds exists, create a password file for vnc authentication

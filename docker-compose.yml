@@ -1,7 +1,9 @@
 version: '2'
 services:
   soulseek:
-    build: .
+    container_name: soulseek
+    image: realies/soulseek
+    restart: unless-stopped
     environment:
       - pgid=1000
       - puid=1000

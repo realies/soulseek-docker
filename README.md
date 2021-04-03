@@ -8,9 +8,8 @@
 ## Typical Usage
 
 ##### Using Docker Compose
-```
-docker-compose up -d
-```
+1. Add the service using the following template [docker-compose.yml](https://github.com/realies/soulseek-docker/blob/master/docker-compose.yml)
+2. Start the service `docker-compose up -d --no-deps --build soulseek`
 
 ##### Using Docker CLI
 ```

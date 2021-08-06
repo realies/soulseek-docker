@@ -37,7 +37,7 @@ autorestart=true
 priority=300
 
 [program:novnc]
-command=/usr/share/novnc/utils/launch.sh
+command=/usr/share/novnc/utils/novnc_proxy
 autorestart=true
 priority=400
 

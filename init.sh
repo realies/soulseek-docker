@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+umask 0000
 [ -f /tmp/.X1-lock ] && rm /tmp/.X1-lock
 pgid=${pgid:-0}
 puid=${puid:-0}

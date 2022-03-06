@@ -18,6 +18,7 @@ docker run -d --name soulseek --restart=always \
 -v "/persistent/appdata":"/data/.SoulseekQt" \
 -v "/persistent/downloads":"/data/Soulseek Downloads" \
 -v "/persistent/logs":"/data/Soulseek Chat Logs" \
+-v "/persistent/shared":"/data/Soulseek Shared Folder" \
 -e pgid=1000 \
 -e puid=1000 \
 -e resize=scale \

@@ -14,6 +14,15 @@ puid=${puid:-0}
 [ "$resize" = "scale" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=scale"/' /usr/share/novnc/index.html
 [ "$resize" = "remote" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=remote"/' /usr/share/novnc/index.html
 resolution=${resolution:-1280x720}x16
+
+# handling timezone
+[ -n "$timeZone" ] && [ -f "/usr/share/zoneinfo/$timeZone" ] && ln -sf "/usr/share/zoneinfo/$timeZone" /etc/localtime
+
+x11vnc_cmd="/usr/bin/x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -nopw -wait 5 -shared -permitfiletransfer -tightfilexfer -rfbport 5900"
+
+# if vncpwds exists, create a password file for vnc authentication
+[ ! -z ${vncpwds} ] && mkdir -p /etc/x11vnc && echo $vncpwds | tr ";" "\n" > /etc/x11vnc/vncpasswd && x11vnc_cmd="$x11vnc_cmd -passwdfile read:/etc/x11vnc/vncpasswd"
+
 [ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$puid" | cut -d: -f1) && echo "[supervisord]
 nodaemon=true
 logfile = /tmp/supervisord.log
@@ -27,7 +36,7 @@ autorestart=true
 priority=100
 
 [program:x11vnc]
-command=/usr/bin/x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -nopw -wait 5 -shared -permitfiletransfer -tightfilexfer -rfbport 5900
+command=$x11vnc_cmd
 autorestart=true
 priority=200
 

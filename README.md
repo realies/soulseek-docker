@@ -23,6 +23,7 @@ docker run -d --name soulseek --restart=always \
 -e puid=1000 \
 -e resize=scale \
 -e resolution=1280x720 \
+-e vncpwds="password1;password2"
 -p 6080:6080 \
 realies/soulseek
 ```
@@ -36,4 +37,10 @@ resize        optional, set the novnc resize mode, defaults to scale, can be:
                   scale     scale the session to the browser window size
                   remote    scale the session to the remote session size
 resolution    optional, set the xvfb resolution, defaults to 1280x720
+vncpwds       optional, protect x11vnc with one ore more passwords serparated by semicolons. If not set, no password will be required by client.
+timeZone      optional, set the local timeZone, examples:
+                  Europe/Paris
+                  Asia/Macao
+                  America/Vancouver
+                  ... whatever value available in /usr/share/zoneinfo
 ```

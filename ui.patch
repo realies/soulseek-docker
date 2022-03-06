@@ -1,7 +1,7 @@
-@@ -85,7 +85,17 @@
-
+@@ -77,7 +77,23 @@
+ 
              <div class="noVNC_scroll">
-
+ 
 -            <h1 class="noVNC_logo" translate="no"><span>no</span><br>VNC</h1>
 +            <!-- Downloads -->
 +            <a href="downloads/" target="_blank">
@@ -9,11 +9,17 @@
 +                    class="noVNC_button" title="Downloads" style="width:20px;height:20px;padding:6.5px" />
 +            </a>
 +
++            <!-- Shared -->
++            <a href="shared/" target="_blank">
++                <input type="image" alt="Logs" src="app/images/shared.svg"
++                    class="noVNC_button" title="Shared" style="width:20px;height:20px;padding:6.5px" />
++            </a>
++
 +            <!-- Logs -->
 +            <a href="logs/" target="_blank">
 +                <input type="image" alt="Logs" src="app/images/logs.svg"
-+                    class="noVNC_button" title="Logs" style="width:18px;height:18px;padding:7.5px" />
++                    class="noVNC_button" title="Logs" style="width:20px;height:20px;padding:6.5px" />
 +            </a>
-
+ 
              <!-- Drag/Pan the viewport -->
              <input type="image" alt="Drag" src="app/images/drag.svg"

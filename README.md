@@ -1,11 +1,11 @@
 # Soulseek Docker Container
 
-![](https://i.snag.gy/8dpAbV.jpg)
-
 ![GitHub Workflow Status](https://shields.api-test.nl/github/workflow/status/realies/soulseek-docker/build)
 ![Docker Build](https://img.shields.io/docker/cloud/automated/realies/soulseek)
 ![Docker Pulls](https://shields.api-test.nl/docker/pulls/realies/soulseek)
 ![Docker Image Size](https://shields.api-test.nl/docker/image-size/realies/soulseek)
+
+![](https://i.snag.gy/8dpAbV.jpg)
 
 ## Typical Usage
 

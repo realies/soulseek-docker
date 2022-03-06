@@ -1,4 +1,4 @@
-# Soulseek Docker Container
+# Soulseek Over noVNC Docker Container
 
 ![GitHub Workflow Status](https://shields.api-test.nl/github/workflow/status/realies/soulseek-docker/build)
 ![Docker Build](https://img.shields.io/docker/cloud/automated/realies/soulseek)
@@ -35,7 +35,7 @@ realies/soulseek
 pgid          optional, only works if puid is set, chown app folders to the specified group id
 puid          optional, only works if pgid is set, chown app folders to the specified user id, run the app with the specified user id
 umask         optional, controls how file permissions are set for newly created files, defaults to 0000
-vncpwd        optional, protect xtigervnc with one ore more passwords serparated by semicolons. If not set, no password will be required by client.
+vncpwd        optional, protect tigervnc with a password, none will be required if this is not set
 timeZone      optional, set the local timeZone, for example:
                   Europe/Paris
                   Asia/Macao

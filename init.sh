@@ -1,60 +1,57 @@
 #!/bin/sh
 set -e
-umask 0000
 [ -f /tmp/.X1-lock ] && rm /tmp/.X1-lock
 pgid=${pgid:-0}
 puid=${puid:-0}
+umask ${umask:-0000}
 [ "$pgid" != 0 ] && [ "$puid" != 0 ] && \
  groupmod -o -g "$pgid" soulseek && \
- usermod -o -u "$puid" soulseek && \
+ usermod  -o -u "$puid" soulseek 1> /dev/null && \
  chown -R soulseek:soulseek /app && \
  chown soulseek:soulseek /data/.* && \
  chown soulseek:soulseek /data/*
-[ "$resize" = "auto" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true"/' /usr/share/novnc/index.html
-[ "$resize" = "scale" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=scale"/' /usr/share/novnc/index.html
-[ "$resize" = "remote" ] && sed -r -i '/src/s/"[^"]+"/"vnc.html?autoconnect=true\&resize=remote"/' /usr/share/novnc/index.html
-resolution=${resolution:-1280x720}x16
 
-# handling timezone
+[ ! -z "${vncpwd}" ] && echo "$vncpwd" | vncpasswd -f > /tmp/passwd
+[ -z "${vncpwd}" ] && rm -f /tmp/passwd && noauth="-SecurityTypes None"
+
+touch /tmp/.Xauthority
+chown soulseek:soulseek /tmp/.Xauthority
+
 [ -n "$timeZone" ] && [ -f "/usr/share/zoneinfo/$timeZone" ] && ln -sf "/usr/share/zoneinfo/$timeZone" /etc/localtime
 
-x11vnc_cmd="/usr/bin/x11vnc -xkb -noxrecord -noxfixes -noxdamage -display :1 -nopw -wait 5 -shared -permitfiletransfer -tightfilexfer -rfbport 5900"
-
-# if vncpwds exists, create a password file for vnc authentication
-[ ! -z ${vncpwds} ] && mkdir -p /etc/x11vnc && echo $vncpwds | tr ";" "\n" > /etc/x11vnc/vncpasswd && x11vnc_cmd="$x11vnc_cmd -passwdfile read:/etc/x11vnc/vncpasswd"
-
 [ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$puid" | cut -d: -f1) && echo "[supervisord]
+user=$username
 nodaemon=true
 logfile = /tmp/supervisord.log
 pidfile = /tmp/supervisord.pid
 directory = /tmp
 childlogdir = /tmp
 
-[program:xvfb]
-command=/usr/bin/Xvfb :1 -screen 0 $resolution
+[program:tigervnc]
+user=$username
+environment=HOME="/tmp",DISPLAY=":1",USER="$username"
+command=/usr/bin/Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
 autorestart=true
 priority=100
 
-[program:x11vnc]
-command=$x11vnc_cmd
+[program:openbox]
+user=$username
+environment=HOME="/tmp",DISPLAY=":1",USER="$username"
+command=/usr/bin/openbox
 autorestart=true
 priority=200
 
-[program:openbox]
-environment=HOME="/root",DISPLAY=":1",USER="root"
-command=/usr/bin/openbox
-autorestart=true
-priority=300
-
 [program:novnc]
+user=$username
+environment=HOME="/tmp",DISPLAY=":1",USER="$username"
 command=/usr/share/novnc/utils/novnc_proxy
 autorestart=true
-priority=400
+priority=300
 
 [program:soulseek]
 user=$username
 environment=HOME="/data",DISPLAY=":1",USER="$username"
 command=/app/SoulseekQt
 autorestart=true
-priority=500" > /etc/supervisord.conf
+priority=400" > /etc/supervisord.conf
 /usr/bin/supervisord -c /etc/supervisord.conf

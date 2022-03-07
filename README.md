@@ -23,8 +23,8 @@ docker run -d --name soulseek --restart=unless-stopped \
 -v "/persistent/downloads":"/data/Soulseek Downloads" \
 -v "/persistent/logs":"/data/Soulseek Chat Logs" \
 -v "/persistent/shared":"/data/Soulseek Shared Folder" \
--e pgid=1000 \
--e puid=1000 \
+-e PGID=1000 \
+-e PUID=1000 \
 -p 6080:6080 \
 realies/soulseek
 ```
@@ -32,11 +32,11 @@ realies/soulseek
 ##### Configuration Parameters
 
 ```
-pgid          optional, only works if puid is set, chown app folders to the specified group id
-puid          optional, only works if pgid is set, chown app folders to the specified user id, run the app with the specified user id
-umask         optional, controls how file permissions are set for newly created files, defaults to 0000
-vncpwd        optional, protect tigervnc with a password, none will be required if this is not set
-timeZone      optional, set the local timeZone, for example:
+PGID          optional, only works if PUID is set, chown app folders to the specified group id
+PUID          optional, only works if PGID is set, chown app folders to the specified user id
+UMASK         optional, controls how file permissions are set for newly created files, defaults to 0000
+VNCPWD        optional, protect tigervnc with a password, none will be required if this is not set
+TZ            optional, set the local time zone, for example:
                   Europe/Paris
                   Asia/Macao
                   America/Vancouver

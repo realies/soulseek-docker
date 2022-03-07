@@ -3,8 +3,8 @@ services:
   soulseek:
     build: .
     environment:
-      - pgid=1000
-      - puid=1000
+      - PGID=1000
+      - PUID=1000
     ports:
       - 6080:6080
     volumes:

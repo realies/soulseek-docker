@@ -1,25 +1,25 @@
 #!/bin/sh
 set -e
 [ -f /tmp/.X1-lock ] && rm /tmp/.X1-lock
-pgid=${pgid:-0}
-puid=${puid:-0}
-umask ${umask:-0000}
-[ "$pgid" != 0 ] && [ "$puid" != 0 ] && \
- groupmod -o -g "$pgid" soulseek && \
- usermod  -o -u "$puid" soulseek 1> /dev/null && \
+PGID=${PGID:-0}
+PUID=${PUID:-0}
+umask ${UMASK:-0000}
+[ "$PGID" != 0 ] && [ "$PUID" != 0 ] && \
+ groupmod -o -g "$PGID" soulseek && \
+ usermod  -o -u "$PUID" soulseek 1> /dev/null && \
  chown -R soulseek:soulseek /app && \
  chown soulseek:soulseek /data/.* && \
  chown soulseek:soulseek /data/*
 
-[ ! -z "${vncpwd}" ] && echo "$vncpwd" | vncpasswd -f > /tmp/passwd
-[ -z "${vncpwd}" ] && rm -f /tmp/passwd && noauth="-SecurityTypes None"
+[ ! -z "${VNCPWD}" ] && echo "$VNCPWD" | vncpasswd -f > /tmp/passwd
+[ -z "${VNCPWD}" ] && rm -f /tmp/passwd && noauth="-SecurityTypes None"
 
 touch /tmp/.Xauthority
 chown soulseek:soulseek /tmp/.Xauthority
 
-[ -n "$timeZone" ] && [ -f "/usr/share/zoneinfo/$timeZone" ] && ln -sf "/usr/share/zoneinfo/$timeZone" /etc/localtime
+[ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ] && ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 
-[ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$puid" | cut -d: -f1) && echo "[supervisord]
+[ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$PUID" | cut -d: -f1) && echo "[supervisord]
 user=$username
 nodaemon=true
 logfile = /tmp/supervisord.log

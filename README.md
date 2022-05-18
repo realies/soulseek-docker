@@ -10,8 +10,8 @@
 ## Usage
 
 1. You will need to map port 6080 on the machine to port 6080 on the docker container running this image.  
-* If you are using a GUI or webapp (e.g. Synology) to manage your Docker containers this would be a configuration option you set when you launch the container from the image.  
-* With the Docker CLI the option is `-p 6080:6080`.
+    * If you are using a GUI or webapp (e.g. Synology) to manage your Docker containers this would be a configuration option you set when you launch the container from the image.  
+    * With the Docker CLI the option is `-p 6080:6080`.
 Once that is done you should be able to connect to the machine on port 6080 with a standard web browser through the magic of `noVNC`.  Example: if your docker VM machine has IP `192.168.1.23` you should be able to connect to the Soulseek app running in docker by typing `https://192.168.1.23:6080` in your browser after launching the container.
 1. Woof
 

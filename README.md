@@ -12,17 +12,16 @@
 1. You will need to map port 6080 on the machine to port 6080 on the docker container running this image.  
     * If you are using a GUI or webapp (e.g. Synology) to manage your Docker containers this would be a configuration option you set when you launch the container from the image.  
     * With the Docker CLI the option is `-p 6080:6080`.
-1. You will probably also want to set up a place on the local disk for Soulseek to work with/download to/etc.  While you can of course just point the app at existing folders it is probably wiser to give the app its own siloed off location on disk.  Soulseek needs four folders to work with.  As an example let's say you wanted Soulseek to work in the `/Volumes/music/Soulseek` directory:
-    1. Set up the directories like this:
-    ```bash
-    mkdir -p /Volumes/music/Soulseek
-    cd /Volumes/music/Soulseek
-    mkdir appdata
-    mkdir downloads
-    mkdir logs
-    mkdir shared
-    ```
-    2. And when you launch
+1. You will probably also want to set up a place on the local disk for Soulseek to work with/download to/etc.  While you can of course just point the app at existing folders it is probably wiser to give the app its own siloed off location on disk.  Soulseek needs four folders to work with.  As an example let's say you wanted Soulseek to work in the `/persistent/Soulseek` directory.  You would set up the directories as follows and then map the volumes (see below for details) when you run the container:
+```bash
+mkdir -p /persistent/Soulseek
+cd /persistent/Soulseek
+mkdir appdata
+mkdir downloads
+mkdir logs
+mkdir shared
+```
+
 
 Once that is done you should be able to connect to the machine on port 6080 with a standard web browser through the magic of `noVNC`.  Example: if your docker VM machine has IP `192.168.1.23` you should be able to connect to the Soulseek app running in docker by typing `https://192.168.1.23:6080` in your browser after launching the container.
 

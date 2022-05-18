@@ -27,7 +27,7 @@ Once that is done you should be able to connect to the machine on port 6080 with
 
 
 ## Usage
-##### Configuration Parameters
+### Configuration Parameters
 
 ```
 PGID          optional, only works if PUID is set, chown app folders to the specified group id

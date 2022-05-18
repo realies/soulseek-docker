@@ -66,5 +66,5 @@ realies/soulseek
 Port config:
 ![](docs/synology_docker_config_ports_screenshot.png)
 
-Volume config:
+Volume config (note that the example mounts an extra directory `/music/FLAC` for sharing; you should mount whatever directory you want to share from):
 ![](docs/synology_docker_config_volumes_screenshot.png)

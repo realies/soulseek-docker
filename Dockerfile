@@ -2,7 +2,7 @@ FROM ubuntu:latest
 COPY ui.patch /tmp
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y binutils ca-certificates curl dbus locales openbox patch supervisor tigervnc-standalone-server tigervnc-common --no-install-recommends && \
+    apt-get install -y binutils ca-certificates curl dbus locales openbox patch supervisor tigervnc-standalone-server tigervnc-common tzdata --no-install-recommends && \
     dbus-uuidgen > /etc/machine-id && \
     locale-gen en_US.UTF-8 && \
     mkdir /usr/share/novnc && \

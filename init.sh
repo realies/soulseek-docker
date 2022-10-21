@@ -8,8 +8,7 @@ umask ${UMASK:-0000}
  groupmod -o -g "$PGID" soulseek && \
  usermod  -o -u "$PUID" soulseek 1> /dev/null && \
  chown -R soulseek:soulseek /app && \
- chown soulseek:soulseek /data/.* && \
- chown soulseek:soulseek /data/*
+ chown -R soulseek:soulseek /data
 
 [ ! -z "${VNCPWD}" ] && echo "$VNCPWD" | vncpasswd -f > /tmp/passwd
 [ -z "${VNCPWD}" ] && rm -f /tmp/passwd && noauth="-SecurityTypes None"

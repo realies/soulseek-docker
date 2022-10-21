@@ -54,4 +54,4 @@ environment=HOME="/data",DISPLAY=":1",USER="$username"
 command=/app/SoulseekQt
 autorestart=true
 priority=400" > /etc/supervisord.conf
-/usr/bin/supervisord -c /etc/supervisord.conf
+exec /usr/bin/supervisord -c /etc/supervisord.conf

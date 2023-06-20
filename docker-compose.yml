@@ -1,6 +1,6 @@
 version: '2'
 services:
-  soulseek:
+  nicotine:
     build: .
     environment:
       - PGID=1000

@@ -28,7 +28,7 @@ childlogdir = /tmp
 [program:tigervnc]
 user=$username
 environment=HOME="/tmp",DISPLAY=":1",USER="$username"
-command=/usr/bin/Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
+command=/usr/bin/Xtigervnc -desktop nicotine -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
 autorestart=true
 priority=100
 
@@ -46,7 +46,7 @@ command=/usr/share/novnc/utils/novnc_proxy
 autorestart=true
 priority=300
 
-[program:soulseek]
+[program:nicotine]
 user=$username
 environment=HOME="/data",DISPLAY=":1",USER="$username"
 command=/usr/bin/nicotine

@@ -18,7 +18,6 @@ RUN apt-get update && \
     patch /usr/share/novnc/vnc.html < /tmp/ui.patch && \
     sed -i 's/10px 0 5px/8px 0 6px/' /usr/share/novnc/app/styles/base.css && \
     mkdir /data /data/config /data/nicotine /share && \
-    ln -s /app/soulseek.png /usr/share/novnc/app/images/soulseek.png && \
     ln -s /data/nicotine/downloads /usr/share/novnc/downloads && \
     ln -s /share /usr/share/novnc/shared && \
     ln -s /data/nicotine/logs /usr/share/novnc/logs && \
@@ -26,6 +25,7 @@ RUN apt-get update && \
     curl -fL# https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/debian-package.zip -o /tmp/nic.zip && \
     unzip /tmp/nic.zip -d /tmp && \
     dpkg -i /tmp/nicotine*.deb && \
+    ln -s /usr/share/icons/hicolor/256x256/apps/org.nicotine_plus.Nicotine.png /usr/share/novnc/app/images/nicotine.png && \
     useradd -u 1000 -U -d /data -s /bin/false soulseek && \
     usermod -G users soulseek && \
     chown -R soulseek:soulseek /data && \

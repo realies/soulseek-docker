@@ -7,7 +7,6 @@ umask ${UMASK:-0000}
 [ "$PGID" != 0 ] && [ "$PUID" != 0 ] && \
  groupmod -o -g "$PGID" soulseek && \
  usermod  -o -u "$PUID" soulseek 1> /dev/null && \
- chown -R soulseek:soulseek /app && \
  chown -R soulseek:soulseek /data
 
 [ ! -z "${VNCPWD}" ] && echo "$VNCPWD" | vncpasswd -f > /tmp/passwd
@@ -50,7 +49,7 @@ priority=300
 [program:soulseek]
 user=$username
 environment=HOME="/data",DISPLAY=":1",USER="$username"
-command=/app/SoulseekQt
+command=/usr/bin/nicotine
 autorestart=true
 priority=400" > /etc/supervisord.conf
 exec /usr/bin/supervisord -c /etc/supervisord.conf

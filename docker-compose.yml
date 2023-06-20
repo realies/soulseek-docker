@@ -7,13 +7,12 @@ services:
       - PUID=1000
     ports:
       - 6080:6080
+      - 5900:5900
     volumes:
-      - appdata:/data/.SoulseekQt
-      - downloads:/data/Soulseek Downloads
-      - shared:/data/Soulseek Shared Folder
-      - logs:/data/Soulseek Chat Logs
+      - config:/data/config
+      - appdata:/data/nicotine
+      - share:/share
 volumes:
+  config:
   appdata:
-  downloads:
-  shared:
-  logs:
+  share:

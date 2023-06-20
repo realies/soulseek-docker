@@ -8,7 +8,7 @@
 <applications>
   <application type="normal">
     <!--<maximized>yes</maximized>-->
-    <fullscreen>yes</fullscreen>
+    <fullscreen>no</fullscreen>
   </application>
 </applications>
 </openbox_config>

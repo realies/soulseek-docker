@@ -1,6 +1,8 @@
 version: '2'
 services:
   nicotine:
+    # define tag externally:   export TAG=xxx
+    image: nicotine-docker:${TAG:-latest}
     build: .
     environment:
       - PGID=1000

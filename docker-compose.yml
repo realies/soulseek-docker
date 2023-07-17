@@ -1,6 +1,7 @@
 version: '2'
 services:
   soulseek:
+    platform: linux/amd64
     build: .
     environment:
       - PGID=1000

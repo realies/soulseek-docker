@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM --platform=linux/amd64 ubuntu:latest
 COPY ui.patch /tmp
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \

@@ -33,6 +33,7 @@ Once that is done you should be able to connect to the machine on port 6080 with
 ```
 PGID          optional, only works if PUID is set, chown app folders to the specified group id
 PUID          optional, only works if PGID is set, chown app folders to the specified user id
+NOVNC_PORT    optional, sets the port on which noVNC is started inside the container, defaults to 6080
 UMASK         optional, controls how file permissions are set for newly created files, defaults to 0000
 VNCPWD        optional, protect tigervnc with a password, none will be required if this is not set
 TZ            optional, set the local time zone, for example:

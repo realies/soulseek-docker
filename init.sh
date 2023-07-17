@@ -18,6 +18,8 @@ chown soulseek:soulseek /tmp/.Xauthority
 
 [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ] && ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 
+NOVNC_PORT=${NOVNC_PORT:-6080}
+
 [ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$PUID" | cut -d: -f1) && echo "[supervisord]
 user=$username
 nodaemon=true
@@ -43,7 +45,7 @@ priority=200
 [program:novnc]
 user=$username
 environment=HOME="/tmp",DISPLAY=":1",USER="$username"
-command=/usr/share/novnc/utils/novnc_proxy
+command=/usr/share/novnc/utils/novnc_proxy --listen ${NOVNC_PORT}
 autorestart=true
 priority=300
 

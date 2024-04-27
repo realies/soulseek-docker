@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 ubuntu:latest
 COPY ui.patch /tmp
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y binutils ca-certificates curl dbus fonts-noto-cjk locales openbox patch supervisor tigervnc-standalone-server tigervnc-tools tzdata --no-install-recommends && \
+    apt-get install -y binutils ca-certificates curl dbus fonts-noto-cjk locales libegl1 openbox patch python3-numpy supervisor tigervnc-standalone-server tigervnc-tools tzdata --no-install-recommends && \
     dbus-uuidgen > /etc/machine-id && \
     locale-gen en_US.UTF-8 && \
     mkdir /usr/share/novnc && \
@@ -21,11 +21,14 @@ RUN apt-get update && \
     ln -s /data/Soulseek\ Downloads /usr/share/novnc/downloads && \
     ln -s /data/Soulseek\ Shared\ Folder /usr/share/novnc/shared && \
     ln -s /data/Soulseek\ Chat\ Logs /usr/share/novnc/logs && \
-    curl -fL# https://www.slsknet.org/SoulseekQt/Linux/SoulseekQt-2018-1-30-64bit-appimage.tgz -o /tmp/soulseek.tgz && \
-    tar -xvzf /tmp/soulseek.tgz -C /tmp && \
-    /tmp/SoulseekQt-2018-1-30-64bit.AppImage --appimage-extract && \
+    curl -fL# "https://drive.usercontent.google.com/download?id=1I7v1fh7jXa_YOh_AJ52XqRB3QJlqc1Hi&export=download&authuser=0" -o /tmp/SoulseekQt-2024-2-4.AppImage && \
+    chmod +x /tmp/SoulseekQt-2024-2-4.AppImage && \
+    /tmp/SoulseekQt-2024-2-4.AppImage --appimage-extract && \
     mv /squashfs-root /app && \
     strip /app/SoulseekQt && \
+    userdel -f "$(id -nu 1000)" || true && \
+    groupdel -f "$(id -ng 1000)" || true && \
+    rm -rf /home && \
     useradd -u 1000 -U -d /data -s /bin/false soulseek && \
     usermod -G users soulseek && \
     mkdir /data && \

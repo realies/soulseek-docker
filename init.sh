@@ -23,7 +23,7 @@ NOVNC_PORT=${NOVNC_PORT:-6080}
 [ ! -f /etc/supervisord.conf ] && username=$(getent passwd "$PUID" | cut -d: -f1) && echo "[supervisord]
 user=$username
 nodaemon=true
-logfile=/dev/stdout
+logfile=/proc/self/fd/1
 logfile_maxbytes=0
 pidfile=/tmp/supervisord.pid
 directory = /tmp
@@ -36,7 +36,7 @@ command=/usr/bin/Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport 590
 autorestart=true
 priority=100
 redirect_stderr=true
-stdout_logfile=/dev/stdout
+stdout_logfile=/proc/self/fd/1
 stdout_logfile_maxbytes=0
 
 [program:openbox]
@@ -46,7 +46,7 @@ command=/usr/bin/openbox
 autorestart=true
 priority=200
 redirect_stderr=true
-stdout_logfile=/dev/stdout
+stdout_logfile=/proc/self/fd/1
 stdout_logfile_maxbytes=0
 
 [program:novnc]
@@ -56,7 +56,7 @@ command=/usr/share/novnc/utils/novnc_proxy --listen ${NOVNC_PORT}
 autorestart=true
 priority=300
 redirect_stderr=true
-stdout_logfile=/dev/stdout
+stdout_logfile=/proc/self/fd/1
 stdout_logfile_maxbytes=0
 
 [program:soulseek]
@@ -66,7 +66,7 @@ command=/app/SoulseekQt
 autorestart=true
 priority=400
 redirect_stderr=true
-stdout_logfile=/dev/stdout
+stdout_logfile=/proc/self/fd/1
 stdout_logfile_maxbytes=0
 " > /etc/supervisord.conf
 exec /usr/bin/supervisord -c /etc/supervisord.conf

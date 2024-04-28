@@ -4,17 +4,27 @@ set -e
 PGID=${PGID:-0}
 PUID=${PUID:-0}
 umask ${UMASK:-0000}
-[ "$PGID" != 0 ] && [ "$PUID" != 0 ] && \
- groupmod -o -g "$PGID" soulseek && \
- usermod  -o -u "$PUID" soulseek 1> /dev/null && \
- chown -R soulseek:soulseek /app && \
- chown -R soulseek:soulseek /data
+
+ensure_ownership() {
+    dir=$1
+    owner=$(stat -c %u:%g "$dir")
+    if [ "$owner" != "$PUID:$PGID" ]; then
+        chown -R soulseek:soulseek "$dir"
+    fi
+}
+
+[ "$PGID" != 0 ] && [ "$PUID" != 0 ] && {
+ groupmod -o -g "$PGID" soulseek
+ usermod -o -u "$PUID" soulseek 1> /dev/null
+ ensure_ownership /app
+ ensure_ownership /data
+}
 
 [ ! -z "${VNCPWD}" ] && echo "$VNCPWD" | vncpasswd -f > /tmp/passwd
 [ -z "${VNCPWD}" ] && rm -f /tmp/passwd && noauth="-SecurityTypes None"
 
 touch /tmp/.Xauthority
-chown soulseek:soulseek /tmp/.Xauthority
+ensure_ownership /tmp/.Xauthority
 
 [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ] && ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 

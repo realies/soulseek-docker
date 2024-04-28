@@ -1,72 +1,110 @@
-# Soulseek Over noVNC Docker Container
+# Soulseek Docker Container
 
 ![GitHub Workflow Status](https://shields.api-test.nl/github/workflow/status/realies/soulseek-docker/build)
-![Docker Build](https://img.shields.io/docker/cloud/automated/realies/soulseek)
+![Docker Build](https://img.shields.io/docker/automated/realies/soulseek)
 ![Docker Pulls](https://shields.api-test.nl/docker/pulls/realies/soulseek)
 ![Docker Image Size](https://shields.api-test.nl/docker/image-size/realies/soulseek)
 
-![](https://i.snag.gy/8dpAbV.jpg)
+![Soulseek Docker Container Screenshot](https://i.snag.gy/8dpAbV.jpg)
+
+## Prerequisites
+
+- Docker installed on your machine or server
+- Port 6080 open and accessible for noVNC web access (or reverse proxied, nginx example at `soulseek.conf`)
+- Ports required by Soulseek open and forwarded from your router to the Docker host machine
 
 ## Setup
 
-1. **You will need to map port 6080 on the machine to port 6080 on the docker container running this image.**
-    * If you are using a GUI or webapp (e.g. Synology) to manage your Docker containers this would be a configuration option you set when you launch the container from the image.  
-    * With the Docker CLI the option is `-p 6080:6080`.
-1. **You will need to map whatever port Soulseek wants to use on the Docker container.**  Soulseek starts up with different (random?) ports. These can be configured from within Soulseek but whatever those ports are, they need to be mapped a) from your router to the machine hosting this docker image and b) from the outside of the docker image to the server within it.  See below for more details.
-1. **You will probably also want to set up a place on the local disk for Soulseek to work with/download to/etc.**  While you can of course just point the app at existing folders it is probably wiser to give the app its own siloed off location on disk.  Soulseek needs four folders to work with.  As an example let's say you wanted Soulseek to work in the `/persistent/Soulseek` directory.  You would set up the directories as follows and then map the volumes (see below for details) when you run the container:
+1. Map port 6080 on the host machine to port 6080 on the Docker container.
+  - If using a GUI or webapp (e.g., Synology) to manage Docker containers, set this configuration option when launching the container from the image.
+  - With Docker CLI, use the `-p 6080:6080` option.
+
+2. Map the ports Soulseek uses on the Docker container.
+  - The first time it runs, Soulseek starts up using a random port. It can also be manually configured in Options -> Login.
+  - Wait for a Soulseek settings file to appear in `/data/.SoulseekQt/1`, this is saved every 60 minutes by default but can be forced to be more freuquent from Options -> General.
+  - Map both ports from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it. See the [Soulseek FAQ](https://www.slsknet.org/news/faq-page#t10n606) for more details.
+
+3. Set up a local directory for Soulseek data.
+  - While you can point the app at existing folders, it's recommended to give the app its own location on disk.
+  - Soulseek needs four folders: `appdata`, `downloads`, `logs`, and `shared`.
+  - Example setup for `/persistent/Soulseek` directory:
     ```bash
     mkdir -p /persistent/Soulseek
     cd /persistent/Soulseek
-    mkdir appdata
-    mkdir downloads
-    mkdir logs
-    mkdir shared
+    mkdir appdata downloads logs shared
     ```
 
+4. Launch the Docker container and map the required volumes (see [How to Launch](#how-to-launch) section below).
 
-Once that is done you should be able to connect to the machine on port 6080 with a standard web browser through the magic of `noVNC`.  Example: if your docker VM machine has IP `192.168.1.23` you should be able to connect to the Soulseek app running in docker by typing `https://192.168.1.23:6080` (or `http://192.168.1.23:6080` depending on your machine's security settings) in your browser after launching the container.
+5. Access the Soulseek UI by opening a web browser and navigating to `http://docker-host-ip:6080` or `https://reverse-proxy`, depending on your configuration.
 
+## Configuration
 
-## Usage
-### Configuration Parameters
+The container supports the following configuration options:
 
+| Parameter    | Description                                                            |
+| ------------ | ---------------------------------------------------------------------- |
+| `PGID`       | Group ID for the container user (optional, requires `PUID`)            |
+| `PUID`       | User ID for the container user (optional, requires `PGID`)             |
+| `NOVNC_PORT` | Port for noVNC web access (default: 6080)                              |
+| `UMASK`      | File permission mask for newly created files (default: 0000)           |
+| `VNCPWD`     | Password for the VNC connection (optional)                             |
+| `TZ`         | Timezone for the container (e.g., `Europe/Paris`, `America/Vancouver`) |
+
+## How to Launch
+
+### Using Docker Compose
+
+```yaml
+version: '3'
+services:
+ soulseek:
+   image: realies/soulseek
+   container_name: soulseek
+   restart: unless-stopped
+   volumes:
+     - /persistent/appdata:/data/.SoulseekQt
+     - /persistent/downloads:/data/Soulseek Downloads
+     - /persistent/logs:/data/Soulseek Chat Logs
+     - /persistent/shared:/data/Soulseek Shared Folder
+   environment:
+     - PGID=1000
+     - PUID=1000
+   ports:
+     - 6080:6080
+     - 61122:61122 # example listening port, check Options -> Login
+     - 61123:61123 # example obfuscated port, check Options -> Login
 ```
-PGID          optional, only works if PUID is set, chown app folders to the specified group id
-PUID          optional, only works if PGID is set, chown app folders to the specified user id
-NOVNC_PORT    optional, sets the port on which noVNC is started inside the container, defaults to 6080
-UMASK         optional, controls how file permissions are set for newly created files, defaults to 0000
-VNCPWD        optional, protect tigervnc with a password, none will be required if this is not set
-TZ            optional, set the local time zone, for example:
-                  Europe/Paris
-                  Asia/Macao
-                  America/Vancouver
-                  ...other values available in /usr/share/zoneinfo
-```
 
-### How To Launch
-##### Using Docker Compose
+### Using Docker CLI
 
-```
-docker-compose up -d
-```
-
-##### Using Docker CLI
-
-```
+```bash
 docker run -d --name soulseek --restart=unless-stopped \
--v "/persistent/appdata":"/data/.SoulseekQt" \
--v "/persistent/downloads":"/data/Soulseek Downloads" \
--v "/persistent/logs":"/data/Soulseek Chat Logs" \
--v "/persistent/shared":"/data/Soulseek Shared Folder" \
--e PGID=1000 \
--e PUID=1000 \
--p 6080:6080 \
-realies/soulseek
+  -v "/persistent/appdata":"/data/.SoulseekQt" \
+  -v "/persistent/downloads":"/data/Soulseek Downloads" \
+  -v "/persistent/logs":"/data/Soulseek Chat Logs" \
+  -v "/persistent/shared":"/data/Soulseek Shared Folder" \
+  -e PGID=1000 \
+  -e PUID=1000 \
+  -p 6080:6080 \
+  -p 61122:61122 \ # example listening port, check Options -> Login
+  -p 61123:61123 \ # example obfuscated port, check Options -> Login
+  realies/soulseek
 ```
 
-##### Using Docker On Synology DSM
-Port config.  Port 6080 is used by noVNC for you to control Soulseek from your local network.  Ports 61122 and 61123 are just examples; you will need to open Soulseek to figure out what exact ports to forward.  Note also that these ports will need to be configured to forward to the machine hosting this docker image; [see Soulseek's port forwarding guide](https://www.theloadguru.com/port-forwarding-tutorial/) for details on how to do that.
-![](docs/synology_docker_config_ports_screenshot.png)
+### Using Docker on Synology DSM
 
-Volume config. Note that the example mounts an extra directory `/music/FLAC` for sharing; you should mount whatever directory you want to share from:
-![](docs/synology_docker_config_volumes_screenshot.png)
+Port Configuration
+
+![Synology Docker Port Configuration](docs/synology_docker_config_ports_screenshot.png)
+
+- Port 6080 is used by noVNC for accessing Soulseek from your local network. Only TCP type is needed.
+- Ports 61122 and 61123 are examples; open Soulseek to determine the exact ports to forward. Only TCP type is needed.
+- Configure these ports to forward from your router to the machine hosting the Docker image. See the Soulseek Port Forwarding Guide for more details.
+
+Volume Configuration
+
+![Synology Docker Volume Configuration](docs/synology_docker_config_volumes_screenshot.png)
+
+- Mount the required directories for Soulseek data persistence.
+- The example mounts an extra directory `/music/FLAC` for sharing; mount the directory you want to share.

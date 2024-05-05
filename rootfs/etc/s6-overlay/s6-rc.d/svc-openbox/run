@@ -1,4 +1,4 @@
 #!/command/with-contenv bash
 
 # Start Openbox
-exec s6-setuidgid soulseek openbox
+exec s6-setuidgid $(id -nu $PUID) openbox

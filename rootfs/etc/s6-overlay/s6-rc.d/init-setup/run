@@ -9,25 +9,32 @@ chmod 1777 /tmp/.X11-unix
 umask ${UMASK}
 
 # Function to ensure directory ownership matches expected user/group IDs
-ensure_ownership() {
-    dir=$1
-    expected_owner="$PUID:$PGID"
-    current_owner=$(stat -c %u:%g "$dir")
-    if [ "$current_owner" != "$expected_owner" ]; then
-        chown -R "${PUID}:${PGID}" "$dir"
-    fi
+ensure_ownership_and_permissions() {
+  dir=$1
+
+  # Set ownership recursively
+  chown -R "$PUID:$PGID" "$dir"
+
+  # Calculate chmod value for files and set permissions for files recursively
+  chmod_file=$(printf "%03o" $((8#666 - 8#${UMASK})))
+  find "$dir" -type f -exec chmod $chmod_file {} +
+
+  # Calculate chmod value for directories and set permissions for directories recursively
+  chmod_dir=$(printf "%03o" $((8#777 - 8#${UMASK})))
+  find "$dir" -type d -exec chmod $chmod_dir {} +
 }
 
-# Modify user and group IDs and ensure ownership
+# Modify user and group IDs
 if [ "$PGID" != 0 ] && [ "$PUID" != 0 ]; then
-    groupmod -o -g "$PGID" soulseek
-    usermod -o -u "$PUID" soulseek
-    ensure_ownership /app
-    ensure_ownership /data
-    ensure_ownership /tmp/.Xauthority
+  groupmod -o -g "$PGID" soulseek
+  usermod -o -u "$PUID" soulseek
 fi
+
+# Ensure ownership and permissions
+ensure_ownership_and_permissions /data
+ensure_ownership_and_permissions /tmp/.Xauthority
 
 # Timezone setup
 if [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ]; then
-    ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
+  ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 fi

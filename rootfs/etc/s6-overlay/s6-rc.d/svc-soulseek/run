@@ -3,4 +3,4 @@
 export HOME=/data
 
 # Start Soulseek
-exec s6-setuidgid soulseek /app/SoulseekQt
+exec s6-setuidgid $(id -nu $PUID) /app/SoulseekQt

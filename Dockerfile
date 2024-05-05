@@ -54,7 +54,7 @@ ENV DISPLAY=:1 \
     NOVNC_PORT=6080 \
     PGID=1000 \
     PUID=1000 \
-    UMASK=0000 \
+    UMASK=022 \
     XDG_RUNTIME_DIR=/tmp
 
 COPY rootfs /

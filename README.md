@@ -50,7 +50,7 @@ The container supports the following configuration options:
 | `PGID`        | Group ID for the container user (optional, requires `PUID`)            |
 | `PUID`        | User ID for the container user (optional, requires `PGID`)             |
 | `NOVNC_PORT`  | Port for noVNC web access (default: 6080)                              |
-| `UMASK`       | File permission mask for newly created files (default: 0000)           |
+| `UMASK`       | File permission mask for newly created files (default: 022)            |
 | `VNCPWD`      | Password for the VNC connection (optional)                             |
 | `VNCPWD_FILE` | Password file for the VNC connection (optional, takes priority)        |
 | `TZ`          | Timezone for the container (e.g., `Europe/Paris`, `America/Vancouver`) |

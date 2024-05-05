@@ -1,0 +1,4 @@
+#!/command/with-contenv bash
+
+# Start noVNC proxy
+exec s6-setuidgid soulseek /usr/share/novnc/utils/novnc_proxy --listen ${NOVNC_PORT}

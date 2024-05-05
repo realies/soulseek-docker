@@ -1,0 +1,4 @@
+#!/command/with-contenv bash
+
+# Start Openbox
+exec s6-setuidgid soulseek openbox

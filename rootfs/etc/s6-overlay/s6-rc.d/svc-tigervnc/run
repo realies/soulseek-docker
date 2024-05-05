@@ -1,0 +1,11 @@
+#!/command/with-contenv bash
+
+# Define default VNC password handling
+if [ -z "${VNCPWD}" ]; then
+    noauth="-SecurityTypes None"
+else
+    echo "${VNCPWD}" | vncpasswd -f > /tmp/passwd
+fi
+
+# Start Tigervnc
+exec s6-setuidgid soulseek Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1

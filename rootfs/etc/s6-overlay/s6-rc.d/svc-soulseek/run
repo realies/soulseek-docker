@@ -1,0 +1,4 @@
+#!/command/with-contenv bash
+
+# Start Soulseek
+exec s6-setuidgid soulseek /app/SoulseekQt

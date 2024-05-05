@@ -1,0 +1,33 @@
+#!/command/with-contenv bash
+
+# Xauthority and X11-unix for graphical applications
+touch /tmp/.Xauthority
+mkdir -p /tmp/.X11-unix
+chmod 1777 /tmp/.X11-unix
+
+# Default umask settings
+umask ${UMASK}
+
+# Function to ensure directory ownership matches expected user/group IDs
+ensure_ownership() {
+    dir=$1
+    expected_owner="$PUID:$PGID"
+    current_owner=$(stat -c %u:%g "$dir")
+    if [ "$current_owner" != "$expected_owner" ]; then
+        chown -R "${PUID}:${PGID}" "$dir"
+    fi
+}
+
+# Modify user and group IDs and ensure ownership
+if [ "$PGID" != 0 ] && [ "$PUID" != 0 ]; then
+    groupmod -o -g "$PGID" soulseek
+    usermod -o -u "$PUID" soulseek
+    ensure_ownership /app
+    ensure_ownership /data
+    ensure_ownership /tmp/.Xauthority
+fi
+
+# Timezone setup
+if [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ]; then
+    ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
+fi

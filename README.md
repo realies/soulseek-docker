@@ -26,34 +26,23 @@
 - Wait for a Soulseek settings file to appear in `/data/.SoulseekQt/1`, this is saved every 60 minutes by default but can be forced to be more freuquent from Options -> General.
 - Map both ports from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it. See the [Soulseek FAQ](https://www.slsknet.org/news/faq-page#t10n606) for more details.
 
-3. Set up a local directory for Soulseek data.
+3. Launch the Docker container and map the required volumes (see [How to Launch](#how-to-launch) section below).
 
-- While you can point the app at existing folders, it's recommended to give the app its own location on disk.
-- Soulseek needs four folders: `appdata`, `downloads`, `logs`, and `shared`.
-- Example setup for `/persistent/Soulseek` directory:
-  ```bash
-  mkdir -p /persistent/Soulseek
-  cd /persistent/Soulseek
-  mkdir appdata downloads logs shared
-  ```
-
-4. Launch the Docker container and map the required volumes (see [How to Launch](#how-to-launch) section below).
-
-5. Access the Soulseek UI by opening a web browser and navigating to `http://docker-host-ip:6080` or `https://reverse-proxy`, depending on your configuration.
+4. Access the Soulseek UI by opening a web browser and navigating to `http://docker-host-ip:6080` or `https://reverse-proxy`, depending on your configuration.
 
 ## Configuration
 
 The container supports the following configuration options:
 
-| Parameter     | Description                                                            |
-| ------------- | ---------------------------------------------------------------------- |
-| `PGID`        | Group ID for the container user (optional, requires `PUID`)            |
-| `PUID`        | User ID for the container user (optional, requires `PGID`)             |
-| `NOVNC_PORT`  | Port for noVNC web access (default: 6080)                              |
-| `UMASK`       | File permission mask for newly created files (default: 022)            |
-| `VNCPWD`      | Password for the VNC connection (optional)                             |
-| `VNCPWD_FILE` | Password file for the VNC connection (optional, takes priority)        |
-| `TZ`          | Timezone for the container (e.g., `Europe/Paris`, `America/Vancouver`) |
+| Parameter     | Description                                                                   |
+| ------------- | ----------------------------------------------------------------------------- |
+| `PGID`        | Group ID for the container user (optional, requires `PUID`, default: 1000)    |
+| `PUID`        | User ID for the container user (optional, requires `PGID`, default: 1000)     |
+| `NOVNC_PORT`  | Port for noVNC web access (optional, default: 6080)                           |
+| `UMASK`       | File permission mask for newly created files (optional, default: 022)         |
+| `VNCPWD`      | Password for the VNC connection (optional)                                    |
+| `VNCPWD_FILE` | Password file for the VNC connection (optional, takes priority over `VNCPWD`) |
+| `TZ`          | Timezone for the container (optional, e.g., Europe/Paris, America/Vancouver)  |
 
 ## How to Launch
 

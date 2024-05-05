@@ -1,4 +1,6 @@
 #!/command/with-contenv bash
 
+export HOME=/data
+
 # Start Soulseek
 exec s6-setuidgid soulseek /app/SoulseekQt

@@ -1,5 +1,10 @@
 #!/command/with-contenv bash
 
+# Check if the VNCPWD_FILE variable is set and file exists
+if [ -n "$VNCPWD_FILE" ] && [ -f "$VNCPWD_FILE" ]; then
+  VNCPWD=$(cat $VNCPWD_FILE)
+fi
+
 # Define default VNC password handling
 if [ -z "${VNCPWD}" ]; then
     noauth="-SecurityTypes None"

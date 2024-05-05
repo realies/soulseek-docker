@@ -16,23 +16,26 @@
 ## Setup
 
 1. Map port 6080 on the host machine to port 6080 on the Docker container.
-  - If using a GUI or webapp (e.g., Synology) to manage Docker containers, set this configuration option when launching the container from the image.
-  - With Docker CLI, use the `-p 6080:6080` option.
+
+- If using a GUI or webapp (e.g., Synology) to manage Docker containers, set this configuration option when launching the container from the image.
+- With Docker CLI, use the `-p 6080:6080` option.
 
 2. Map the ports Soulseek uses on the Docker container.
-  - The first time it runs, Soulseek starts up using a random port. It can also be manually configured in Options -> Login.
-  - Wait for a Soulseek settings file to appear in `/data/.SoulseekQt/1`, this is saved every 60 minutes by default but can be forced to be more freuquent from Options -> General.
-  - Map both ports from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it. See the [Soulseek FAQ](https://www.slsknet.org/news/faq-page#t10n606) for more details.
+
+- The first time it runs, Soulseek starts up using a random port. It can also be manually configured in Options -> Login.
+- Wait for a Soulseek settings file to appear in `/data/.SoulseekQt/1`, this is saved every 60 minutes by default but can be forced to be more freuquent from Options -> General.
+- Map both ports from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it. See the [Soulseek FAQ](https://www.slsknet.org/news/faq-page#t10n606) for more details.
 
 3. Set up a local directory for Soulseek data.
-  - While you can point the app at existing folders, it's recommended to give the app its own location on disk.
-  - Soulseek needs four folders: `appdata`, `downloads`, `logs`, and `shared`.
-  - Example setup for `/persistent/Soulseek` directory:
-    ```bash
-    mkdir -p /persistent/Soulseek
-    cd /persistent/Soulseek
-    mkdir appdata downloads logs shared
-    ```
+
+- While you can point the app at existing folders, it's recommended to give the app its own location on disk.
+- Soulseek needs four folders: `appdata`, `downloads`, `logs`, and `shared`.
+- Example setup for `/persistent/Soulseek` directory:
+  ```bash
+  mkdir -p /persistent/Soulseek
+  cd /persistent/Soulseek
+  mkdir appdata downloads logs shared
+  ```
 
 4. Launch the Docker container and map the required volumes (see [How to Launch](#how-to-launch) section below).
 
@@ -42,38 +45,39 @@
 
 The container supports the following configuration options:
 
-| Parameter    | Description                                                            |
-| ------------ | ---------------------------------------------------------------------- |
-| `PGID`       | Group ID for the container user (optional, requires `PUID`)            |
-| `PUID`       | User ID for the container user (optional, requires `PGID`)             |
-| `NOVNC_PORT` | Port for noVNC web access (default: 6080)                              |
-| `UMASK`      | File permission mask for newly created files (default: 0000)           |
-| `VNCPWD`     | Password for the VNC connection (optional)                             |
-| `TZ`         | Timezone for the container (e.g., `Europe/Paris`, `America/Vancouver`) |
+| Parameter     | Description                                                            |
+| ------------- | ---------------------------------------------------------------------- |
+| `PGID`        | Group ID for the container user (optional, requires `PUID`)            |
+| `PUID`        | User ID for the container user (optional, requires `PGID`)             |
+| `NOVNC_PORT`  | Port for noVNC web access (default: 6080)                              |
+| `UMASK`       | File permission mask for newly created files (default: 0000)           |
+| `VNCPWD`      | Password for the VNC connection (optional)                             |
+| `VNCPWD_FILE` | Password file for the VNC connection (optional, takes priority)        |
+| `TZ`          | Timezone for the container (e.g., `Europe/Paris`, `America/Vancouver`) |
 
 ## How to Launch
 
 ### Using Docker Compose
 
 ```yaml
-version: '3'
+version: "3"
 services:
- soulseek:
-   image: realies/soulseek
-   container_name: soulseek
-   restart: unless-stopped
-   volumes:
-     - /persistent/appdata:/data/.SoulseekQt
-     - /persistent/downloads:/data/Soulseek Downloads
-     - /persistent/logs:/data/Soulseek Chat Logs
-     - /persistent/shared:/data/Soulseek Shared Folder
-   environment:
-     - PGID=1000
-     - PUID=1000
-   ports:
-     - 6080:6080
-     - 61122:61122 # example listening port, check Options -> Login
-     - 61123:61123 # example obfuscated port, check Options -> Login
+  soulseek:
+    image: realies/soulseek
+    container_name: soulseek
+    restart: unless-stopped
+    volumes:
+      - /persistent/appdata:/data/.SoulseekQt
+      - /persistent/downloads:/data/Soulseek Downloads
+      - /persistent/logs:/data/Soulseek Chat Logs
+      - /persistent/shared:/data/Soulseek Shared Folder
+    environment:
+      - PGID=1000
+      - PUID=1000
+    ports:
+      - 6080:6080
+      - 61122:61122 # example listening port, check Options -> Login
+      - 61123:61123 # example obfuscated port, check Options -> Login
 ```
 
 ### Using Docker CLI

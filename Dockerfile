@@ -51,6 +51,7 @@ ENV DISPLAY=:1 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
+    VNC_PORT=5900 \
     NOVNC_PORT=6080 \
     PGID=1000 \
     PUID=1000 \

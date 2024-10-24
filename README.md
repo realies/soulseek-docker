@@ -38,6 +38,7 @@ The container supports the following configuration options:
 | ------------- | ----------------------------------------------------------------------------- |
 | `PGID`        | Group ID for the container user (optional, requires `PUID`, default: 1000)    |
 | `PUID`        | User ID for the container user (optional, requires `PGID`, default: 1000)     |
+| `VNC_PORT`    | Port for VNC server (optional, default: 5900)                                 |
 | `NOVNC_PORT`  | Port for noVNC web access (optional, default: 6080)                           |
 | `UMASK`       | File permission mask for newly created files (optional, default: 022)         |
 | `VNCPWD`      | Password for the VNC connection (optional)                                    |

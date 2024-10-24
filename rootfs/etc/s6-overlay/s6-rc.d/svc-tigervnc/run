@@ -12,5 +12,5 @@ else
   echo "${VNCPWD}" | vncpasswd -f > /tmp/passwd
 fi
 
-# Start Tigervnc
-exec s6-setuidgid $(id -nu $PUID) Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
+# Start Tigervnc with configurable port
+exec s6-setuidgid $(id -nu $PUID) Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport ${VNC_PORT} -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1

@@ -56,6 +56,7 @@ ENV DISPLAY=:1 \
     PGID=1000 \
     PUID=1000 \
     UMASK=022 \
+    MODIFY_VOLUMES=true \
     XDG_RUNTIME_DIR=/tmp
 
 COPY rootfs /

@@ -34,16 +34,17 @@
 
 The container supports the following configuration options:
 
-| Parameter     | Description                                                                   |
-| ------------- | ----------------------------------------------------------------------------- |
-| `PGID`        | Group ID for the container user (optional, requires `PUID`, default: 1000)    |
-| `PUID`        | User ID for the container user (optional, requires `PGID`, default: 1000)     |
-| `VNC_PORT`    | Port for VNC server (optional, default: 5900)                                 |
-| `NOVNC_PORT`  | Port for noVNC web access (optional, default: 6080)                           |
-| `UMASK`       | File permission mask for newly created files (optional, default: 022)         |
-| `VNCPWD`      | Password for the VNC connection (optional)                                    |
-| `VNCPWD_FILE` | Password file for the VNC connection (optional, takes priority over `VNCPWD`) |
-| `TZ`          | Timezone for the container (optional, e.g., Europe/Paris, America/Vancouver)  |
+| Parameter       | Description                                                                   |
+| --------------- | ----------------------------------------------------------------------------- |
+| `PGID`          | Group ID for the container user (optional, requires `PUID`, default: 1000)    |
+| `PUID`          | User ID for the container user (optional, requires `PGID`, default: 1000)     |
+| `VNC_PORT`      | Port for VNC server (optional, default: 5900)                                 |
+| `NOVNC_PORT`    | Port for noVNC web access (optional, default: 6080)                           |
+| `MODIFY_VOLUMES`| Modify ownership and permissions of mounted volumes (optional, default: true) |
+| `UMASK`         | File permission mask for newly created files (optional, default: 022)         |
+| `VNCPWD`        | Password for the VNC connection (optional)                                    |
+| `VNCPWD_FILE`   | Password file for the VNC connection (optional, takes priority over `VNCPWD`) |
+| `TZ`            | Timezone for the container (optional, e.g., Europe/Paris, America/Vancouver)  |
 
 ## How to Launch
 

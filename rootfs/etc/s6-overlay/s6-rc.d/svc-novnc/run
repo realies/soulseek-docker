@@ -1,4 +1,4 @@
 #!/command/with-contenv bash
 
 # Start noVNC proxy
-exec s6-setuidgid $(id -nu $PUID) /usr/share/novnc/utils/novnc_proxy --listen ${NOVNC_PORT}
+exec s6-setuidgid $(id -nu $PUID) /usr/share/novnc/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NOVNC_PORT}

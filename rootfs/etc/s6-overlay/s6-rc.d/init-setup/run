@@ -8,20 +8,23 @@ chmod 1777 /tmp/.X11-unix
 # Default umask settings
 umask ${UMASK}
 
-# Function to ensure directory ownership matches expected user/group IDs
+# Function to ensure directory ownership and permissions
 ensure_ownership_and_permissions() {
   dir=$1
+  
+  # Only modify volumes if MODIFY_VOLUMES is not false
+  if [ "${MODIFY_VOLUMES,,}" != "false" ]; then
+    # Set ownership recursively
+    chown -R "$PUID:$PGID" "$dir"
 
-  # Set ownership recursively
-  chown -R "$PUID:$PGID" "$dir"
+    # Calculate chmod value for files and set permissions for files recursively
+    chmod_file=$(printf "%03o" $((8#666 - 8#${UMASK})))
+    find "$dir" -type f -exec chmod $chmod_file {} +
 
-  # Calculate chmod value for files and set permissions for files recursively
-  chmod_file=$(printf "%03o" $((8#666 - 8#${UMASK})))
-  find "$dir" -type f -exec chmod $chmod_file {} +
-
-  # Calculate chmod value for directories and set permissions for directories recursively
-  chmod_dir=$(printf "%03o" $((8#777 - 8#${UMASK})))
-  find "$dir" -type d -exec chmod $chmod_dir {} +
+    # Calculate chmod value for directories and set permissions for directories recursively
+    chmod_dir=$(printf "%03o" $((8#777 - 8#${UMASK})))
+    find "$dir" -type d -exec chmod $chmod_dir {} +
+  fi
 }
 
 # Modify user and group IDs

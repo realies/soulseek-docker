@@ -1,4 +1,14 @@
 #!/command/with-contenv bash
 
-# Start noVNC proxy
-exec s6-setuidgid $(id -nu $PUID) /usr/share/novnc/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NOVNC_PORT}
+# Print all relevant variables and command components for debugging
+echo "Environment variables:"
+echo "VNC_PORT=${VNC_PORT}"
+echo "NOVNC_PORT=${NOVNC_PORT}"
+echo "PUID=${PUID}"
+echo "User resolution:"
+echo "id -nu $PUID = $(id -nu $PUID)"
+echo "Full command that will be executed:"
+echo "s6-setuidgid $(id -nu $PUID) /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 --web /usr/share/novnc"
+
+# Start noVNC proxy with explicit websockify options
+exec s6-setuidgid $(id -nu $PUID) /usr/share/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 --web /usr/share/novnc

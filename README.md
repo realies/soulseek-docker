@@ -1,9 +1,9 @@
 # Soulseek Docker Container
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/realies/soulseek-docker/build.yml)
-![Docker Build](https://img.shields.io/docker/automated/realies/soulseek)
-![Docker Pulls](https://img.shields.io/docker/pulls/realies/soulseek)
-![Docker Image Size](https://img.shields.io/docker/image-size/realies/soulseek)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/realies/soulseek-docker?style=flat-square&logo=git&label=last%20commit)](https://github.com/realies/soulseek-docker/commits/main)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/realies/soulseek-docker/build.yml?style=flat-square&logo=github&label=build)](https://github.com/realies/soulseek-docker/actions)
+[![Docker Pulls](https://img.shields.io/docker/pulls/realies/soulseek?style=flat-square&logo=docker&label=pulls)](https://hub.docker.com/r/realies/soulseek)
+[![Docker Image Size](https://img.shields.io/docker/image-size/realies/soulseek?style=flat-square&logo=docker&label=size)](https://hub.docker.com/r/realies/soulseek)
 
 ![Soulseek Docker Container Screenshot](https://i.snag.gy/8dpAbV.jpg)
 

@@ -31,9 +31,9 @@ RUN apt-get update && \
     ln -s /data/Soulseek\ Downloads /usr/share/novnc/downloads && \
     ln -s /data/Soulseek\ Shared\ Folder /usr/share/novnc/shared && \
     ln -s /data/Soulseek\ Chat\ Logs /usr/share/novnc/logs && \
-    curl -fL# 'https://drive.usercontent.google.com/download?id=1I7v1fh7jXa_YOh_AJ52XqRB3QJlqc1Hi&export=download&authuser=0' -o /tmp/SoulseekQt-2024-2-4.AppImage && \
-    chmod +x /tmp/SoulseekQt-2024-2-4.AppImage && \
-    /tmp/SoulseekQt-2024-2-4.AppImage --appimage-extract && \
+    curl -fL# 'https://f004.backblazeb2.com/file/SoulseekQt/SoulseekQt-2024-6-30.AppImage' -o /tmp/SoulseekQt-2024-6-30.AppImage && \
+    chmod +x /tmp/SoulseekQt-2024-6-30.AppImage && \
+    /tmp/SoulseekQt-2024-6-30.AppImage --appimage-extract && \
     mv /squashfs-root /app && \
     strip /app/SoulseekQt && \
     userdel -f $(id -nu 1000) || true && \

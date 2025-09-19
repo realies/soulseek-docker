@@ -57,6 +57,7 @@ ENV DISPLAY=:1 \
     PUID=1000 \
     UMASK=022 \
     MODIFY_VOLUMES=true \
+    S6_KILL_FINISH_MAXTIME=0 \
     XDG_RUNTIME_DIR=/tmp
 
 COPY rootfs /

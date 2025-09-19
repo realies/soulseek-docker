@@ -5,9 +5,6 @@ touch /tmp/.Xauthority
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
-# Default umask settings
-umask ${UMASK}
-
 # Function to ensure directory ownership and permissions
 ensure_ownership_and_permissions() {
   dir=$1

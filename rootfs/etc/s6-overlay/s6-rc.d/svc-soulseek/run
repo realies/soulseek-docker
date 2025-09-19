@@ -1,6 +1,8 @@
 #!/command/with-contenv bash
 
 export HOME=/data
+# Default umask settings
+umask ${UMASK}
 
 # Start Soulseek
 exec s6-setuidgid $(id -nu $PUID) /app/SoulseekQt

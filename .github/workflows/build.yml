@@ -22,6 +22,10 @@ jobs:
           base-image: "ubuntu:latest"
           image: "realies/soulseek:latest"
 
+      - name: Set up QEMU
+        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
+        uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         uses: docker/setup-buildx-action@v3
@@ -33,17 +37,33 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Docker Image
+      - name: Build and Push AMD64 Image
         if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
           push: true
-          tags: realies/soulseek:latest
-          builder: ${{ steps.buildx.outputs.name }}
+          tags: realies/soulseek:amd64
           platforms: linux/amd64
+
+      - name: Build and Push ARM64 Image
+        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.arm64
+          push: true
+          tags: realies/soulseek:arm64
+          platforms: linux/arm64
+
+      - name: Create and Push Multi-Arch Manifest
+        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
+        run: |
+          docker buildx imagetools create -t realies/soulseek:latest \
+            realies/soulseek:amd64 \
+            realies/soulseek:arm64
 
       - name: Docker Image Digest
         if: steps.image_update_check.outputs.needs-updating == 'true'
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: docker buildx imagetools inspect realies/soulseek:latest

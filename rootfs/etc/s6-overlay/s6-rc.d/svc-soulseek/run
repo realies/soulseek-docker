@@ -5,4 +5,4 @@ export HOME=/data
 umask ${UMASK}
 
 # Start Soulseek
-exec s6-setuidgid $(id -nu $PUID) /app/SoulseekQt
+exec s6-setuidgid "$(id -nu "$PUID")" /app/SoulseekQt

@@ -8,8 +8,10 @@ on:
     - cron: "0 9 * * *"
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
+    outputs:
+      should-build: ${{ steps.decide.outputs.should-build }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -17,53 +19,78 @@ jobs:
       - name: Check if Base Image Updated
         id: image_update_check
         if: github.event_name == 'schedule'
-        uses: lucacome/docker-image-update-checker@v2.0.0
+        uses: lucacome/docker-image-update-checker@v2
         with:
           base-image: "ubuntu:latest"
           image: "realies/soulseek:latest"
 
+      - name: Decide Whether to Build
+        id: decide
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ steps.image_update_check.outputs.needs-updating }}" = "true" ]; then
+            echo "should-build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should-build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: check
+    if: needs.check.outputs.should-build == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            tag: amd64
+          - platform: linux/arm64
+            tag: arm64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Set up QEMU
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push AMD64 Image
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
+      - name: Build and Push Image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
           push: true
-          tags: realies/soulseek:amd64
-          platforms: linux/amd64
+          tags: realies/soulseek:${{ matrix.tag }}
+          platforms: ${{ matrix.platform }}
+          cache-from: type=gha,scope=${{ matrix.tag }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.tag }}
 
-      - name: Build and Push ARM64 Image
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
-        uses: docker/build-push-action@v6
+  manifest:
+    needs: [check, build]
+    if: needs.check.outputs.should-build == 'true' && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          context: .
-          file: Dockerfile.arm64
-          push: true
-          tags: realies/soulseek:arm64
-          platforms: linux/arm64
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Create and Push Multi-Arch Manifest
-        if: github.event_name == 'push' || steps.image_update_check.outputs.needs-updating == 'true'
         run: |
           docker buildx imagetools create -t realies/soulseek:latest \
             realies/soulseek:amd64 \
             realies/soulseek:arm64
 
       - name: Docker Image Digest
-        if: steps.image_update_check.outputs.needs-updating == 'true'
         run: docker buildx imagetools inspect realies/soulseek:latest

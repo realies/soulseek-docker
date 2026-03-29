@@ -11,7 +11,7 @@
 +
 +            <!-- Shared -->
 +            <a href="shared/" target="_blank">
-+                <input type="image" alt="Logs" src="app/images/shared.svg"
++                <input type="image" alt="Shared" src="app/images/shared.svg"
 +                    class="noVNC_button" title="Shared" style="width:20px;height:20px;padding:6.5px" />
 +            </a>
 +

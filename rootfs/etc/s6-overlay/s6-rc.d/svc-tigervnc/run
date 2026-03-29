@@ -1,16 +1,21 @@
 #!/command/with-contenv bash
 
-# Check if the VNCPWD_FILE variable is set and file exists
-if [ -n "$VNCPWD_FILE" ] && [ -f "$VNCPWD_FILE" ]; then
-  VNCPWD=$(cat $VNCPWD_FILE)
-fi
-
-# Define default VNC password handling
-if [ -z "${VNCPWD}" ]; then
-  noauth="-SecurityTypes None"
-else
-  echo "${VNCPWD}" | vncpasswd -f > /tmp/passwd
+# Check if the VNCPWD_FILE variable is set — fail closed if configured but unreadable/empty
+if [ -n "$VNCPWD_FILE" ]; then
+  [ -r "$VNCPWD_FILE" ] || { echo "VNCPWD_FILE is not readable: $VNCPWD_FILE" >&2; exit 1; }
+  VNCPWD=$(cat "$VNCPWD_FILE")
+  [ -n "$VNCPWD" ] || { echo "VNCPWD_FILE is empty: $VNCPWD_FILE" >&2; exit 1; }
 fi
 
 # Start Tigervnc with configurable port
-exec s6-setuidgid $(id -nu $PUID) Xtigervnc -desktop soulseek -auth /tmp/.Xauthority -rfbport ${VNC_PORT} -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
+if [ -z "${VNCPWD}" ]; then
+  exec s6-setuidgid "$(id -nu "$PUID")" Xtigervnc \
+    -desktop soulseek -auth /tmp/.Xauthority -rfbport "${VNC_PORT}" \
+    -nopn -quiet -AlwaysShared -SecurityTypes None :1
+else
+  (umask 077 && echo "${VNCPWD}" | vncpasswd -f > /tmp/passwd) || { echo "vncpasswd failed" >&2; exit 1; }
+  chown "$(id -nu "$PUID")" /tmp/passwd
+  exec s6-setuidgid "$(id -nu "$PUID")" Xtigervnc \
+    -desktop soulseek -auth /tmp/.Xauthority -rfbport "${VNC_PORT}" \
+    -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared :1
+fi

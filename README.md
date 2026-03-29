@@ -36,6 +36,9 @@ Access the UI at `http://localhost:6080`
 | `TZ` | - | Timezone (e.g., `America/New_York`) |
 | `VNCPWD` | - | VNC password |
 | `VNCPWD_FILE` | - | Path to VNC password file |
+| `VNC_PORT` | `5900` | VNC server port |
+| `NOVNC_PORT` | `6080` | noVNC web UI port |
+| `MODIFY_VOLUMES` | `true` | Set ownership/permissions on volumes at startup |
 
 ## Port Forwarding
 

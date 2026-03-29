@@ -1,40 +1,65 @@
 #!/command/with-contenv bash
 
+# Generate unique machine-id per container
+python3 -c "import uuid; print(uuid.uuid4().hex)" > /etc/machine-id
+
 # Xauthority and X11-unix for graphical applications
 touch /tmp/.Xauthority
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
+# Validate PUID/PGID independently (rejects 0, leading zeros, non-numeric)
+if ! printf '%s' "$PUID" | grep -qE '^[1-9][0-9]*$'; then
+  echo "PUID is not a valid positive integer, using default 1000" >&2
+  PUID=1000
+  printf '%s' "$PUID" > /var/run/s6/container_environment/PUID
+fi
+
+if ! printf '%s' "$PGID" | grep -qE '^[1-9][0-9]*$'; then
+  echo "PGID is not a valid positive integer, using default 1000" >&2
+  PGID=1000
+  printf '%s' "$PGID" > /var/run/s6/container_environment/PGID
+fi
+
+# Validate UMASK is a valid 3-4 digit octal number within a safe range
+if ! printf '%s' "${UMASK}" | grep -qE '^[0-7]{3,4}$' || [ "$((8#${UMASK}))" -gt "$((8#077))" ]; then
+  echo "UMASK value out of allowed range (000-077): ${UMASK}, using default 022" >&2
+  UMASK=022
+  printf '%s' "$UMASK" > /var/run/s6/container_environment/UMASK
+fi
+
 # Function to ensure directory ownership and permissions
 ensure_ownership_and_permissions() {
   dir=$1
-  
-  # Only modify volumes if MODIFY_VOLUMES is not false
+
+  # Always fix runtime files; allow skipping mounted volumes only
+  if [ "$dir" = "/tmp/.Xauthority" ]; then
+    chown "$PUID:$PGID" "$dir"
+    chmod 600 "$dir"
+    return
+  fi
+
   if [ "${MODIFY_VOLUMES,,}" != "false" ]; then
-    # Set ownership recursively
     chown -R "$PUID:$PGID" "$dir"
 
-    # Calculate chmod value for files and set permissions for files recursively
-    chmod_file=$(printf "%03o" $((8#666 - 8#${UMASK})))
-    find "$dir" -type f -exec chmod $chmod_file {} +
+    chmod_file=$(printf "%03o" $(( 8#666 & ~8#${UMASK} )))
+    find "$dir" -type f -exec chmod "$chmod_file" {} +
 
-    # Calculate chmod value for directories and set permissions for directories recursively
-    chmod_dir=$(printf "%03o" $((8#777 - 8#${UMASK})))
-    find "$dir" -type d -exec chmod $chmod_dir {} +
+    chmod_dir=$(printf "%03o" $(( 8#777 & ~8#${UMASK} )))
+    find "$dir" -type d -exec chmod "$chmod_dir" {} +
   fi
 }
 
 # Modify user and group IDs
-if [ "$PGID" != 0 ] && [ "$PUID" != 0 ]; then
-  groupmod -o -g "$PGID" soulseek
-  usermod -o -u "$PUID" soulseek
-fi
+groupmod -o -g "$PGID" soulseek \
+  && usermod -o -u "$PUID" soulseek \
+  || { echo "Failed to remap soulseek to ${PUID}:${PGID}" >&2; exit 1; }
 
 # Ensure ownership and permissions
 ensure_ownership_and_permissions /data
 ensure_ownership_and_permissions /tmp/.Xauthority
 
-# Timezone setup
-if [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ]; then
+# Timezone setup (reject path traversal)
+if [ -n "$TZ" ] && printf '%s' "$TZ" | grep -qE '^[A-Za-z][A-Za-z0-9_+/-]{1,63}$' && [ -f "/usr/share/zoneinfo/$TZ" ]; then
   ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
 fi

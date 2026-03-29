@@ -8,15 +8,9 @@ touch /tmp/.Xauthority
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
-# Validate PUID/PGID are positive integers and not root
+# Validate PUID/PGID are positive integers (rejects 0, leading zeros, non-numeric)
 if ! printf '%s' "$PUID" | grep -qE '^[1-9][0-9]*$' || ! printf '%s' "$PGID" | grep -qE '^[1-9][0-9]*$'; then
-  echo "PUID or PGID is not a valid integer, using defaults" >&2
-  PUID=1000
-  PGID=1000
-  printf '%s' "$PUID" > /var/run/s6/container_environment/PUID
-  printf '%s' "$PGID" > /var/run/s6/container_environment/PGID
-elif [ "$((10#$PUID))" -eq 0 ] || [ "$((10#$PGID))" -eq 0 ]; then
-  echo "PUID=0 or PGID=0 is not supported (running as root is a security risk), using defaults" >&2
+  echo "PUID or PGID is not a valid positive integer, using defaults" >&2
   PUID=1000
   PGID=1000
   printf '%s' "$PUID" > /var/run/s6/container_environment/PUID

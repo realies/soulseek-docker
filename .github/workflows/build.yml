@@ -66,6 +66,7 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          pull: true
           push: true
           tags: realies/soulseek:${{ matrix.tag }}
           platforms: ${{ matrix.platform }}

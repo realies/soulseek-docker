@@ -1,8 +1,10 @@
 #!/command/with-contenv bash
 
-# Check if the VNCPWD_FILE variable is set and file exists
-if [ -n "$VNCPWD_FILE" ] && [ -f "$VNCPWD_FILE" ]; then
+# Check if the VNCPWD_FILE variable is set — fail closed if configured but unreadable/empty
+if [ -n "$VNCPWD_FILE" ]; then
+  [ -r "$VNCPWD_FILE" ] || { echo "VNCPWD_FILE is not readable: $VNCPWD_FILE" >&2; exit 1; }
   VNCPWD=$(cat "$VNCPWD_FILE")
+  [ -n "$VNCPWD" ] || { echo "VNCPWD_FILE is empty: $VNCPWD_FILE" >&2; exit 1; }
 fi
 
 # Start Tigervnc with configurable port

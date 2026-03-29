@@ -31,8 +31,8 @@ fi
 ensure_ownership_and_permissions() {
   dir=$1
 
-  # Only modify volumes if MODIFY_VOLUMES is not false
-  if [ "${MODIFY_VOLUMES,,}" != "false" ]; then
+  # Always fix runtime files; allow skipping mounted volumes only
+  if [ "$dir" = "/tmp/.Xauthority" ] || [ "${MODIFY_VOLUMES,,}" != "false" ]; then
     # Set ownership recursively
     chown -R "$PUID:$PGID" "$dir"
 

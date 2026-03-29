@@ -40,7 +40,7 @@ RUN curl -fL# "https://f004.backblazeb2.com/file/SoulseekQt/SoulseekQt-${SOULSEE
       tail -c +$((OFFSET + 1)) /tmp/SoulseekQt.AppImage > /tmp/appimage.squashfs && \
       unsquashfs -d /staging/app /tmp/appimage.squashfs && \
       mv /staging/app/SoulseekQt /staging/app/SoulseekQt.x86_64 && \
-      printf '#!/bin/bash\nexport BOX64_LD_LIBRARY_PATH=/app/lib:$BOX64_LD_LIBRARY_PATH\nexport BOX64_LOG=0\nexec /usr/local/bin/box64 /app/SoulseekQt.x86_64 "$@"\n' > /staging/app/SoulseekQt && \
+      printf '#!/bin/bash\nexport BOX64_LD_LIBRARY_PATH=/app/lib:${BOX64_LD_LIBRARY_PATH:-}\nexport BOX64_LOG=0\nexec box64 /app/SoulseekQt.x86_64 "$@"\n' > /staging/app/SoulseekQt && \
       chmod +x /staging/app/SoulseekQt; \
     fi && \
     rm -rf /tmp/*
@@ -131,6 +131,6 @@ ENV DISPLAY=:1 \
 COPY rootfs /
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD python3 -c "import urllib.request, os; urllib.request.urlopen('http://localhost:' + os.environ.get('NOVNC_PORT', '6080') + '/', timeout=4)"
+  CMD python3 -c "import os, socket, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('NOVNC_PORT', '6080') + '/', timeout=4); socket.create_connection(('127.0.0.1', int(os.environ.get('VNC_PORT', '5900'))), timeout=4).close()"
 
 ENTRYPOINT ["/init"]

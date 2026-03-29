@@ -35,7 +35,7 @@ RUN curl -fL# "https://f004.backblazeb2.com/file/SoulseekQt/SoulseekQt-${SOULSEE
       mv /squashfs-root /staging/app && \
       strip /staging/app/SoulseekQt; \
     else \
-      OFFSET=$(grep -abo 'hsqs' /tmp/SoulseekQt.AppImage | head -1 | cut -d: -f1) && \
+      OFFSET=$(grep -abo 'hsqs' /tmp/SoulseekQt.AppImage | tail -1 | cut -d: -f1) && \
       [ -n "$OFFSET" ] || { echo "Could not find squashfs header in AppImage" >&2; exit 1; } && \
       tail -c +$((OFFSET + 1)) /tmp/SoulseekQt.AppImage > /tmp/appimage.squashfs && \
       unsquashfs -d /staging/app /tmp/appimage.squashfs && \

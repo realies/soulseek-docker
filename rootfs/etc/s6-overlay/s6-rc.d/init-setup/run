@@ -8,12 +8,16 @@ touch /tmp/.Xauthority
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
-# Validate PUID/PGID are positive integers (rejects 0, leading zeros, non-numeric)
-if ! printf '%s' "$PUID" | grep -qE '^[1-9][0-9]*$' || ! printf '%s' "$PGID" | grep -qE '^[1-9][0-9]*$'; then
-  echo "PUID or PGID is not a valid positive integer, using defaults" >&2
+# Validate PUID/PGID independently (rejects 0, leading zeros, non-numeric)
+if ! printf '%s' "$PUID" | grep -qE '^[1-9][0-9]*$'; then
+  echo "PUID is not a valid positive integer, using default 1000" >&2
   PUID=1000
-  PGID=1000
   printf '%s' "$PUID" > /var/run/s6/container_environment/PUID
+fi
+
+if ! printf '%s' "$PGID" | grep -qE '^[1-9][0-9]*$'; then
+  echo "PGID is not a valid positive integer, using default 1000" >&2
+  PGID=1000
   printf '%s' "$PGID" > /var/run/s6/container_environment/PGID
 fi
 
@@ -44,10 +48,9 @@ ensure_ownership_and_permissions() {
 }
 
 # Modify user and group IDs
-if [ "$PGID" != "0" ] && [ "$PUID" != "0" ]; then
-  groupmod -o -g "$PGID" soulseek
-  usermod -o -u "$PUID" soulseek
-fi
+groupmod -o -g "$PGID" soulseek \
+  && usermod -o -u "$PUID" soulseek \
+  || { echo "Failed to remap soulseek to ${PUID}:${PGID}" >&2; exit 1; }
 
 # Ensure ownership and permissions
 ensure_ownership_and_permissions /data

@@ -1,5 +1,8 @@
 #!/command/with-contenv bash
 
+# Generate unique machine-id per container
+python3 -c "import uuid; print(uuid.uuid4().hex)" > /etc/machine-id
+
 # Xauthority and X11-unix for graphical applications
 touch /tmp/.Xauthority
 mkdir -p /tmp/.X11-unix

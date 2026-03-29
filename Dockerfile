@@ -78,7 +78,6 @@ RUN apt-get update && \
     libxcb-keysyms1 libxcb-randr0 libxcb-shape0 libxcb-sync1 libxcb-xfixes0 \
     libxcb-cursor0 libxkbcommon0 libxkbcommon-x11-0" || true) && \
     locale-gen en_US.UTF-8 && \
-    python3 -c "import uuid; print(uuid.uuid4().hex)" > /etc/machine-id && \
     # Install Box64 for arm64 x86_64 emulation with GPG fingerprint verification
     if [ "$TARGETARCH" = "arm64" ]; then \
       mkdir -p /usr/share/keyrings && \

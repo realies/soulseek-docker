@@ -129,6 +129,6 @@ ENV DISPLAY=:1 \
 COPY rootfs /
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-  CMD bash -c "exec 3<>/dev/tcp/127.0.0.1/${NOVNC_PORT} && echo -e 'GET / HTTP/1.0\r\n\r\n' >&3 && head -1 <&3 | grep -q '200 OK' && exec 3>&-" && DISPLAY=:1 vncconfig -get desktop > /dev/null && pgrep -f SoulseekQt > /dev/null
+  CMD bash -c "exec 3<>/dev/tcp/127.0.0.1/${NOVNC_PORT} && echo -e 'GET / HTTP/1.0\r\n\r\n' >&3 && head -1 <&3 | grep -q '200 OK' && exec 3>&-" && DISPLAY=:1 vncconfig -get desktop > /dev/null && pgrep -f '[S]oulseekQt' > /dev/null
 
 ENTRYPOINT ["/init"]

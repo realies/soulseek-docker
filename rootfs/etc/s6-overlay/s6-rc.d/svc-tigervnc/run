@@ -11,12 +11,12 @@ fi
 if [ -z "${VNCPWD}" ]; then
   exec s6-setuidgid "$(id -nu "$PUID")" Xtigervnc \
     -desktop soulseek -auth /tmp/.Xauthority -rfbport "${VNC_PORT}" \
-    -nopn -quiet -AlwaysShared -SecurityTypes None :1
+    -nopn -quiet -AlwaysShared -UseBlacklist 0 -SecurityTypes None :1
 else
   [ "${#VNCPWD}" -gt 8 ] && echo "WARNING: VNC auth only uses the first 8 characters of VNCPWD" >&2
   (umask 077 && printf '%s\n' "${VNCPWD}" | vncpasswd -f > /tmp/passwd) || { echo "vncpasswd failed" >&2; exit 1; }
   chown "$(id -nu "$PUID")" /tmp/passwd
   exec s6-setuidgid "$(id -nu "$PUID")" Xtigervnc \
     -desktop soulseek -auth /tmp/.Xauthority -rfbport "${VNC_PORT}" \
-    -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared :1
+    -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared -UseBlacklist 0 :1
 fi

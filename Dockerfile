@@ -4,7 +4,6 @@ FROM ubuntu:latest AS downloader
 ARG TARGETARCH
 
 ARG SOULSEEKQT_VERSION=2024-6-30
-ARG BOX64_GPG_FINGERPRINT=32F9ECBF8E64E9C22F95AEB34DBE689F87D192A5
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -40,7 +39,7 @@ RUN curl -fL# "https://f004.backblazeb2.com/file/SoulseekQt/SoulseekQt-${SOULSEE
       tail -c +$((OFFSET + 1)) /tmp/SoulseekQt.AppImage > /tmp/appimage.squashfs && \
       unsquashfs -d /staging/app /tmp/appimage.squashfs && \
       mv /staging/app/SoulseekQt /staging/app/SoulseekQt.x86_64 && \
-      printf '#!/bin/bash\nexport BOX64_LD_LIBRARY_PATH=/app/lib:${BOX64_LD_LIBRARY_PATH:-}\nexport BOX64_LOG=0\nexec box64 /app/SoulseekQt.x86_64 "$@"\n' > /staging/app/SoulseekQt && \
+      printf '#!/bin/bash\nexport BOX64_LD_LIBRARY_PATH=/app/lib${BOX64_LD_LIBRARY_PATH:+:${BOX64_LD_LIBRARY_PATH}}\nexport BOX64_LOG=0\nexec box64 /app/SoulseekQt.x86_64 "$@"\n' > /staging/app/SoulseekQt && \
       chmod +x /staging/app/SoulseekQt; \
     fi && \
     rm -rf /tmp/*
@@ -129,7 +128,7 @@ ENV DISPLAY=:1 \
 
 COPY rootfs /
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD python3 -c "import os, socket, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.environ.get('NOVNC_PORT', '6080') + '/', timeout=4); socket.create_connection(('127.0.0.1', int(os.environ.get('VNC_PORT', '5900'))), timeout=4).close()"
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD bash -c "exec 3<>/dev/tcp/127.0.0.1/${NOVNC_PORT} && echo -e 'GET / HTTP/1.0\r\n\r\n' >&3 && head -1 <&3 | grep -q '200 OK' && exec 3>&-" && DISPLAY=:1 vncconfig -get desktop > /dev/null && pgrep -f SoulseekQt > /dev/null
 
 ENTRYPOINT ["/init"]

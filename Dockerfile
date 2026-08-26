@@ -7,7 +7,7 @@ ARG SOULSEEKQT_VERSION=2024-6-30
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    ca-certificates curl xz-utils patch \
+    ca-certificates curl xz-utils \
     $([ "$TARGETARCH" = "amd64" ] && echo "binutils" || true) \
     $([ "$TARGETARCH" = "arm64" ] && echo "squashfs-tools" || true) && \
     rm -rf /var/lib/apt/lists/*
@@ -45,7 +45,7 @@ RUN curl -fL# "https://f004.backblazeb2.com/file/SoulseekQt/SoulseekQt-${SOULSEE
     rm -rf /tmp/*
 
 # Download and prepare noVNC + websockify + icons
-COPY ui.patch /tmp/
+COPY ui-buttons.html /tmp/
 RUN mkdir -p /staging/usr/share/novnc && \
     curl -fL# https://github.com/novnc/noVNC/archive/master.tar.gz -o /tmp/novnc.tar.gz && \
     tar -xf /tmp/novnc.tar.gz --strip-components=1 -C /staging/usr/share/novnc && \
@@ -56,8 +56,8 @@ RUN mkdir -p /staging/usr/share/novnc && \
     curl -fL# https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/6.x/svgs/solid/folder.svg -o /staging/usr/share/novnc/app/images/shared.svg && \
     curl -fL# https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/6.x/svgs/solid/comments.svg -o /staging/usr/share/novnc/app/images/logs.svg && \
     bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /staging/usr/share/novnc/app/images/{downloads,logs,shared}.svg' && \
-    patch /staging/usr/share/novnc/vnc.html < /tmp/ui.patch && \
-    sed -i 's/10px 0 5px/8px 0 6px/' /staging/usr/share/novnc/app/styles/base.css && \
+    sed -i '/<div class="noVNC_scroll">/r /tmp/ui-buttons.html' /staging/usr/share/novnc/vnc.html && \
+    grep -qF soulseek_nav /staging/usr/share/novnc/vnc.html || { echo "noVNC control bar layout changed" >&2; exit 1; } && \
     rm -rf /tmp/*
 
 # ===== Stage 2: Runtime image =====

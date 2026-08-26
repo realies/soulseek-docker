@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Actions are pinned to SHAs; Dependabot bumps the SHA and the `# vX.Y.Z`
+  # comment together, so pinning does not become manual maintenance.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

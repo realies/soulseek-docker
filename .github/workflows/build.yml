@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: "0 9 * * *"
 
+# Docker Hub credentials come from secrets, and the gha cache uses the runtime
+# token, so no job needs a write-capable GITHUB_TOKEN.
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
